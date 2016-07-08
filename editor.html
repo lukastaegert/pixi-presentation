@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!--suppress HtmlFormInputWithoutLabel -->
+
+<html>
+<head>
+    <title>Editor</title>
+
+    <script src="src/client/editor.js"></script>
+    <link rel="stylesheet" href="style/editor.css">
+</head>
+<body>
+
+<label for="editor-file">File</label>
+<select id="editor-file" name="editor-file" data-base-path="live-edit/src">
+    <option value="echo1.py" data-language="python" data-execute="python live-edit/src/echo1.py">Echo (version 1)</option>
+    <option value="echo2.py" data-language="python" data-execute="python live-edit/src/echo2.py">Echo (version 2)</option>
+</select>
+<button id="execute">Execute</button>
+<div>
+    <textarea id="editor" name="editor"></textarea>
+</div>
+
+<h2>Output:</h2>
+
+<div>
+    <pre class="output"></pre>
+</div>
+
+</body>
+</html>

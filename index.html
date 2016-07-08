@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="de">
+
+<head>
+    <meta charset="utf-8">
+
+    <!-- FIXME -->
+    <title>TNG Präsentationen mit Reveal.js</title>
+
+    <!-- FIXME -->
+    <meta name="description" content="Der Inhalt des Vortrags">
+    <meta name="author" content="Die Autoren">
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="style/presentation.css">
+    <script src="src/client/presentation.js"></script>
+</head>
+
+<!--
+  Wofür stehen die CSS-Klassen?
+  charred: Charred-Trail-Plugin aktivieren,
+  auto-fragment: alle <li> innerhalb von <ul> und <ol> in Fragments umwandeln, d.h. bei Tastendruck erst einblenden
+-->
+<body class="charred auto-fragment">
+
+<div class="i18n">
+    <!-- FIXME: hier wenn gewünscht die Überschrift der Abschnitts-Übersichtseite ändern -->
+    <span class="section-overview">Übersicht</span>
+</div>
+
+<!-- Titel-Slide -->
+<section>
+    <h1>Reveal.js</h1><!-- FIXME -->
+    <h3>Bei TNG verwenden</h3><!-- FIXME -->
+    <p style="padding-top:15%">
+        <a href="mailto:thomas.endres@tngtech.com">Thomas Endres</a>,<!-- FIXME -->
+        <a href="mailto:michael.pisula@tngtech.com">Michael Pisula</a>,<!-- FIXME -->
+        <a href="mailto:eric.weikl@tngtech.com">Eric Weikl</a><br><!-- FIXME -->
+        Unterföhring, 2016-06-15<!-- FIXME -->
+    </p>
+    <a href="http://www.tngtech.com"><img class="logo" src="img/tng.svg"></a>
+</section>
+
+<!-- Inhalt ab hier, für eigene Präsentationen einfach löschen -->
+<!-- Gibt man data-title="foo" an, wird eine Übersichtseite mit Links hier in die Präsentation eingefügt -->
+<section data-title="Einführung">
+    <section>
+        <h2>Worum geht's?</h2>
+
+        <ul class="no-burn">
+            <li><a href="http://lab.hakim.se/reveal-js/#/">Reveal.js</a>-Präsentationen bei TNG einheitlicher gestalten
+            </li>
+            <li>Clevere Tricks verschiedener TNGler konsolidieren</li>
+            <li>Look &amp; Feel von Reveal an TNG angleichen</li>
+            <li>Vorlage für eigene Präsentationen</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Was ist anders als beim normalen Reveal-Download?</h2>
+        <ol class="no-burn">
+            <li>Style: TNG-ähnliche Farben &amp; Schriften, Logo, Animationen</li>
+            <li>
+                Build-System mit <a href="https://webpack.github.io">webpack</a>
+                und <a href="http://gulpjs.com/" target="_blank">gulp.js</a>
+            </li>
+            <li>Zusätzliche Plugins mitgeliefert, die sich bewährt haben:
+                <ul class="no-burn">
+                    <li><a href="https://github.com/theone1984/reveal-animate">
+                        Animate Plugin</a>, um aus SVGs animierte Bilder zu erstellen
+                    </li>
+                    <li><a href="https://github.com/ericweikl/revealjs-charred">
+                        Charred Trail Plugin</a> für Bullet Point und Source Code Highlighting
+                    </li>
+                    <li><a href="https://github.com/theone1984/reveal-sectiontitle">
+                        Section Title Plugin</a> für optionale Übersichtsseiten
+                    </li>
+                    <li>Live Editing Plugin zum Live Coding</li>
+                </ul>
+            </li>
+        </ol>
+    </section>
+
+    <section>
+        <h2>Start der Präsentation</h2>
+
+        <ol class="no-burn">
+
+            <li><a href="https://nodejs.org/" target="_blank">Node.js</a> installieren</li>
+            <li>Konsolenbefehl: <br/> (im Präsentations-Verzeichnis)
+                <pre><code class="bash">$ ./start.sh</code></pre>
+                <pre><code class="bash">start.bat</code></pre>
+            </li>
+            <li>
+                Im Browser <a href="http://localhost:8000" target="_blank">http://localhost:8000</a>
+            </li>
+        </ol>
+    </section>
+</section>
+
+<section data-title="Slides">
+    <section>
+        <h1>Einfache Elemente</h1>
+    </section>
+
+    <section>
+        <h2>Dies ist eine Überschrift</h2>
+
+        <p style="margin-top: 50px;">Ein Element in der Präsentation</p>
+
+        <p class="not-printed" style="margin-top: 30px;">Dieses Element wird in der Druckansicht nicht angezeigt</p>
+
+        <p style="margin-top: 30px;">Dieses Element wird dagegen wieder gedruckt</p>
+    </section>
+
+    <section>
+        <h2>Präsentation in HTML</h2>
+
+        <h3>Level-3-Überschrift</h3>
+
+        <p>Dieser Text wurde in HTML geschrieben</p>
+        <ul class="no-burn">
+            <li>Listenpunkt 1</li>
+            <li>Listenpunkt 2</li>
+        </ul>
+
+    <pre><code class="sql">-- Code kann auch geschrieben werden
+SELECT *
+FROM Table
+WHERE key='value';</code></pre>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            ## Präsentation in Markdown
+            ### Level-3-Überschrift
+
+            Dieser Text wurde in Markdown geschrieben
+
+            * Listenpunkt 1
+            * Listenpunkt 2
+
+            ```sql
+            -- Code kann auch geschrieben werden
+            SELECT *
+            FROM Table
+            WHERE key='value';
+            ```
+        </script>
+    </section>
+
+    <section>
+        <h1>Bullet Points</h1>
+        <h4 class="fragment">(bitte sparsam verwenden ;-))</h4>
+    </section>
+
+    <section>
+        <h2>Bullet Points</h2>
+
+        <h3>Standardverhalten</h3>
+        <ul>
+            <li>Standardmäßig...</li>
+            <li>...werden Punkte nach und nach eingeblendet...</li>
+            <li data-fragment-index="4">...die Reihenfolge ist konfigurierbar</li>
+            <li>...wobei alte Elemente verblassen...</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Bullet Points</h2>
+
+        <h3>(statisch)</h3>
+        <ul class="no-burn">
+            <li>Diese Elemente...</li>
+            <li>...sind immer sichtbar</li>
+        </ul>
+        <hr>
+        <ul>
+            <li class="no-burn">Diese Elemente...</li>
+            <li class="no-burn">...verblassen nie</li>
+            <li class="no-burn">egal wie viele kommen</li>
+            <li class="no-burn">Beides wird über CSS-Klassen gesteuert</li>
+        </ul>
+    </section>
+</section>
+
+<section data-title="Plugins">
+    <section>
+        <h1>Überblicks-Seite</h1>
+    </section>
+
+    <section>
+        <h2>Überblicks-Seite</h2>
+
+        <p>Alle Sections der obersten Ebene, <br/>die ein Attribut, "data-title" besitzen:</p>
+        <ul class="no-burn">
+            <li>Erhalten eine Übersichtsseite (wo stehen wir gerade?)</li>
+            <li>Werden mit ihrem Titel auf der Übersichtsseite angezeigt</li>
+        </ul>
+    </section>
+
+    <section>
+        <h1>Source Code Focus</h1>
+    </section>
+
+    <section>
+        <p>Bei Source-Code Beispielen kann man die Stelle, über die man gerade spricht, fokussieren:</p>
+        <pre><code class="java" data-noescape>
+public ^1^class^^ HelloWorld {
+    public static ^4^void^^ ^2^main^^(^3^String[] args^^) {
+        ^5^System.out.println("Hello World!");^^
+    }
+}
+        </code></pre>
+    </section>
+
+    <section>
+        <h1>Animationen</h1>
+    </section>
+
+    <section>
+        <h2>Animierte Elemente</h2>
+
+        <div class="animated-html" style="height: 600px;">
+            <animation data-duration="500">
+                <animate data-id="box" data-property="opacity" data-value="1"></animate>
+            </animation>
+            <animation data-duration="500">
+                <animate data-id="box" data-property="top" data-value="400px"></animate>
+                <animate data-id="box" data-property="left" data-value="400px"></animate>
+            </animation>
+
+            <div id="box"
+                 style="position: absolute; left: 200px; top: 200px; width: 400px; border: 1px solid black; opacity: 0;">
+                Dieser Text wird sich bewegen
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Animierte Elemente</h2>
+
+        <p>SVG</p>
+
+        <div class="svg animated-svg" src="img/test/tng-animated.svg"
+             style="margin-left: 320px; margin-top: 30px; width: 400px; height: 200px;">
+            <initial>
+                <state data-id="TNG" data-property="opacity" data-value="0"></state>
+                <state data-id="technology-consulting" data-property="opacity" data-value="0"></state>
+            </initial>
+            <animation data-duration="500">
+                <animate data-id="TNG" data-property="opacity" data-value="1"></animate>
+                <animate data-id="technology-consulting" data-property="opacity" data-value="1"></animate>
+            </animation>
+            <animation data-duration="500">
+                <animate data-id="TNG" data-property="transform" data-value="translate(-114, 63)"></animate>
+            </animation>
+            <animation data-duration="500">
+                <animate data-id="technology-consulting" data-property="transform"
+                         data-value="translate(113, -66)"></animate>
+            </animation>
+        </div>
+    </section>
+
+
+    <section>
+        <h1>Live-Editing</h1>
+    </section>
+
+    <section>
+        <h2>Worum geht's?</h2>
+
+        <ul class="no-burn">
+            <li>Live-Editor und Ausführung auf der Kommandozeile</li>
+            <li>Im Editor können Inhalte editiert werden</li>
+            <li>Im Präsentationsfenster werden sie sofort aktualisiert</li>
+            <li>Editierte Inhalte werden sofort gespeichert</li>
+            <li>Beliebige Kommandozeilenbefehle können ausgeführt werden</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>How To - Editor</h2>
+
+        <p class="no-burn">Für jedes File, das editiert werden soll:</p>
+        <ul class="no-burn">
+            <li>Im Element &lt;select&gt; das Attribut "data-base-path" auf den Basispfad ändern</li>
+            <li>Ein Eintrag &lt;option&gt; pro editierbarem File:</li>
+            <li>
+                <ul class="no-burn" style="margin-top: 20px;">
+                    <li>Attribut "data-file": Dateiname relativ zum Basispfad</li>
+                    <li>Attribut "data-language": Verwendete Sprache</li>
+                    <li>Attribut "data-execute": Befehl für die Ausführung</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>How To - Präsentation</h2>
+
+        <p>Anzeige des Codes einer Datei:</p>
+
+        <ul class="no-burn">
+            <li>HTML-Elemente &lt;pre&gt;&lt;code&gt; anlegen:</li>
+            <li>Dem Code-Tag eine ID geben</li>
+            <li>Attribut "data-file": Dateiname (inkl. Basispfad)</li>
+            <li>Attribut "data-language": Verwendete Sprache</li>
+        </ul>
+
+        <p style="margin-top: 30px;">Anzeige des Outputs der Ausführung:</p>
+        <ul class="no-burn">
+            <li>Den Block mit Klasse "output-section" kopieren</li>
+            <li>Attribut "data-file" des &lt;code&gt;-Tage:<br/> Dateiname (inkl Basispfad)</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Python-Test 1</h2>
+
+        <p>Editor: <a href="editor.html" target="_blank">editor.html</a></p>
+        <pre><code id="viewer-python-test-1" class="viewer"
+                   data-file="live-edit/src/echo1.py" data-language="python"
+                   style="height: 350px;" data-noescape></code></pre>
+
+        <div class="output-section" data-file="live-edit/src/echo1.py">
+            <p>Output:</p>
+            <pre class="output"></pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>Python-Test 2</h2>
+
+        <p>Editor: <a href="editor.html" target="_blank">editor.html</a></p>
+        <pre><code id="viewer-python-test-2" class="viewer"
+                   data-file="live-edit/src/echo2.py" data-language="python"
+                   style="height: 350px;" data-noescape></code></pre>
+
+        <div class="output-section" data-file="live-edit/src/echo2.py">
+            <p>Output:</p>
+            <pre class="output"></pre>
+        </div>
+    </section>
+</section>
+
+<section data-title="Weitere Features">
+    <section>
+        <h2>SpeakerView</h2>
+
+        <ul class="no-burn">
+            <li>Zum Start der Speaker View 's' drücken</li>
+            <li>Oder '?notes' an die URL anhängen <br/> (vor dem Fragment-Identifier '#')</li>
+            <li>In der Upcoming-Section werden folgende <br/> Fragmente/Slides angezeigt</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>PDF erzeugen</h2>
+
+        <ul class="no-burn">
+            <li>'?print-pdf' an die URL anhängen <br/> (vor dem Fragment-Identifier '#')</li>
+            <li>Dann kann über den normalen Druckdialog <br/> gedruckt werden</li>
+            <li>Druckränder beachten!</li>
+        </ul>
+    </section>
+</section>
+
+<section data-title="Getting Started">
+    <section>
+        <h2>Wie erzeuge ich meine Präsentation?</h2>
+        <ol class="no-burn">
+            <li>
+                Hier findet sich das
+                <a href="https://bitbucket.int.tngtech.com/projects/TNG/repos/reveal-presentation-template/browse">Git-Repository</a>
+            </li>
+            <li>Vorlage auschecken:
+                <pre style="width: 950px;"><code class="bash">$ git clone \
+  ssh://git@bitbucket.int.tngtech.com:122/tng/reveal-presentation-template.git</code></pre>
+            </li>
+            <li>index.html ansehen und anpassen</li>
+            <li>Push in ein eigenes (neues) Repository</li>
+        </ol>
+    </section>
+</section>
+
+<!-- Danke Slide -->
+<section>
+    <h1>Vielen Dank!</h1>
+
+    <h2>Bei Fragen zur Hilfe:</h2>
+
+    <div>
+        <img style="height: 200px" src="img/test/ThomasEndres.jpg">
+        <img style="height: 200px" src="img/test/EricWeikl.jpg">
+        <img style="height: 200px" src="img/test/MichaelPisula.png">
+    </div>
+    <p>
+        <a href="mailto:john.doe@tngtech.com">john.doe@tngtech.com</a><br>
+        <a href="http://www.twitter.com/johndoe">@johndoe</a>
+    </p>
+    <a href="http://www.tngtech.com"><img class="logo" src="img/tng.svg"></a>
+</section>
+
+</body>
+</html>
