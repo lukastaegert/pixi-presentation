@@ -1,0 +1,17 @@
+{
+  "name": "tng-reveal-template",
+  "version": "2.2.0",
+  "description": "TNG reveal.js presentation template",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@bitbucket.int.tngtech.com:122/rpt/presentation-template.git"
+  },
+  "scripts": {
+    "start": "node src/server/server.js"
+  },
+  "dependencies": {
+    "express": "^4.4.1",
+    "minimist": "^1.2.0",
+    "socket.io": "^1.4.5"
+  }
+}
