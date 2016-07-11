@@ -9,8 +9,6 @@ Voraussetzung für das Projekt ist lediglich eine Node.js-Installation:
 sudo apt-get install nodejs     # Linux mit Aptitude
 brew install nodejs             # Mac OS X mit Brew
 choco install nodejs            # Windows mit Chocolatey
-
-npm install --global gulp-cli
 ```
 
 Daraufhin kann der Server mittels folgendem Befehl gestartet werden:
@@ -21,6 +19,21 @@ start.bat       # Windows
 ```
 
 Nun kann im Browser zu "http://localhost:8000" navigiert werden.
+
+## Start der Präsentation ohne Server
+
+Ein Server ist nicht nötig, falls der Browser mit der Möglichkeit zu File Access gestartet wird:
+
+```
+chrome --allow-file-access-from-files
+firefox                                 # Dateizugriff funktioniert auch ohne Parameter
+```
+
+Per Navigation zu "file://{PATH_ON_FILE_SYSTEM}" kann dann die Präsentation aufgerufen werden.
+
+Live Editing ist in diesem Fall allerdings nicht möglich.
+Falls die entsprechenden Folien aus der Präsentation entfernt werden, versucht der Browser auch nicht mehr,
+eine Websocket-Verbindung aufzubauen.
 
 ## Wie entwerfe ich eine Präsentation?
 
