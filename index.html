@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="style/presentation.css">
     <script src="src/client/presentation.js"></script>
     <script src="src/client/custom.js"></script>
+    <script src="src/client/async.js"></script>
 </head>
 
 <!--
@@ -25,20 +26,15 @@
 -->
 <body class="charred auto-fragment">
 
-    <div class="i18n">
-        <!-- FIXME: hier wenn gewünscht die Überschrift der Abschnitts-Übersichtseite ändern -->
-        <span class="section-overview">Übersicht</span>
-    </div>
-
     <!-- Titel-Slide -->
     <section>
         <h3>Wie man</h3>
         <h1>JavaScript schnell</h1>
         <h3>macht (oder die Illusion erweckt)</h3>
-        <p style="padding-top:10%">
+        <p style="padding-top:5%">
             <a href="mailto:lukas.taegert@tngtech.com">Lukas Taegert</a>
-            TechDay@Unterföhring, 2016-10-28
         </p>
+        <p>TechDay@Unterföhring, 2016-10-28</p>
         <a href="http://www.tngtech.com"><img class="logo" src="img/tng.svg"></a>
     </section>
 
@@ -62,7 +58,10 @@
             <p>Animation Frames werden</p>
             <h2>aggregiert</h2>
             <p>und als synchroner Block ausgeführt</p>
-            <div class="fragment no-burn" data-fragment-index="1" style="width: 60%; display:inline-block"><pre><code class="hljs js" id="aggregate-frames" data-trim contenteditable>
+            <div class="fragment no-burn" data-fragment-index="1" style="width: 60%; display:inline-block"><pre><code class="hljs js"
+                                                                                                                      id="aggregate-frames"
+                                                                                                                      data-trim
+                                                                                                                      contenteditable>
 function printTimeStamp(timeStamp) {
     document.getElementById('agg-out')
         .textContent += timeStamp + '\n';
@@ -80,12 +79,15 @@ requestAnimationFrame(printTimeStamp);
             <div class="fragment no-burn" data-fragment-index="1" style="width: 30%; display:inline-block; vertical-align: top">
                 <pre><code data-trim id="agg-out" style="max-height: 15em; min-height: 1em"></code></pre>
             </div>
-            <a class="fragment no-burn" data-fragment-index="1" style="display: block" onclick="return runCode('aggregate-frames')" href="#">Ausführen</a>
+            <a class="fragment no-burn" data-fragment-index="1" style="display: block" onclick="return runCode('aggregate-frames')"
+               href="#">Ausführen</a>
         </section>
         <section>
             <p>Messen der aktuellen Frame Rate mit einer</p>
             <h2>Animation Loop</h2>
-            <div class="fragment no-burn" data-fragment-index="1" style="width: 65%; display:inline-block"><pre><code class="hljs js" id="loop" data-trim contenteditable>
+            <div class="fragment no-burn" data-fragment-index="1" style="width: 65%; display:inline-block"><pre><code class="hljs js"
+                                                                                                                      id="loop" data-trim
+                                                                                                                      contenteditable>
 var startTime = 0, counter = 0;
 
 function measureFrameRate(timeStamp) {
@@ -107,8 +109,10 @@ requestAnimationFrame(measureFrameRate);
             <div class="fragment no-burn" data-fragment-index="1" style="width: 25%; display:inline-block; vertical-align: top">
                 <pre><code data-trim id="loop-out" style="max-height: 15em; min-height: 1em"></code></pre>
             </div>
-            <a class="fragment no-burn" data-fragment-index="1" style="display: inline-block; margin-right: 10%" onclick="window.isStopped = false; return runCode('loop')" href="#">Ausführen</a>
-            <a class="fragment no-burn" data-fragment-index="1" style="display: inline-block" onclick="window.isStopped = true; return false" href="#">Stop</a>
+            <a class="fragment no-burn" data-fragment-index="1" style="display: inline-block; margin-right: 10%"
+               onclick="window.isStopped = false; return runCode('loop')" href="#">Ausführen</a>
+            <a class="fragment no-burn" data-fragment-index="1" style="display: inline-block"
+               onclick="window.isStopped = true; return false" href="#">Stop</a>
         </section>
         <section>
             <p>
@@ -122,248 +126,280 @@ requestAnimationFrame(measureFrameRate);
         </section>
     </section>
 
-    <section data-title="Aus synchron mach asynchron">
+    <section data-title="Synchron wird asynchron">
         <section>
             <h3>Aus synchron mach</h3>
             <h1>asynchron</h1>
         </section>
         <section>
+            <p>
+                Braucht Dein Code
+            </p>
             <h2>
-                Braucht Dein Code zu lange?
+                zu lange?
             </h2>
-            <pre><code class="hljs js" data-trim contenteditable>
+            <pre class="fragment no-burn" data-fragment-index="1" style="width:70%"><code class="hljs js" id="console-time" data-trim
+                                                                                          contenteditable>
 console.time('myTimer');
 
 for (var i = 0; i < 100000; i++) {}
 
 console.timeEnd('myTimer');
                 </code></pre>
+            <a class="fragment no-burn" data-fragment-index="1" style="display: inline-block" onclick="return runCode('console-time')"
+               href="#">Ausführen</a>
         </section>
-    </section>
-
-    <section data-title="Messen statt glauben mit performance.now"></section>
-
-    <section data-title="setSuperQuickTimeout"></section>
-
-    <section data-title="Getting MORE done mit Web Workern"></section>
-
-
-    <section data-title="Plugins">
         <section>
-            <h1>Überblicks-Seite</h1>
+            <p>Hilfreich zum Aufspalten langer Berechnungen:</p>
+            <h2>
+                <a href="http://caolan.github.io/async/"><img style="width: 30%" src="img/async-logo.svg"></a>
+            </h2>
+            <a href="http://caolan.github.io/async/">caolan.github.io/async</a>
+            <p class="fragment">Sammlung von Tools, um verschiedenste Codestrukturen<br>asynchron zu machen</p>
         </section>
-
         <section>
-            <h2>Überblicks-Seite</h2>
+            <p>Berechne Pi</p>
+            <pre style="width: 75%"><code class="hljs js" id="better-pi" data-trim contenteditable>
+var pi = 0, count = 1;
 
-            <p>Alle Sections der obersten Ebene, <br/>die ein Attribut, "data-title" besitzen:</p>
-            <ul class="no-burn">
-                <li>Erhalten eine Übersichtsseite (wo stehen wir gerade?)</li>
-                <li>Werden mit ihrem Titel auf der Übersichtsseite angezeigt</li>
-            </ul>
-        </section>
-
-        <section>
-            <h1>Source Code Focus</h1>
-        </section>
-
-        <section>
-            <p>Bei Source-Code Beispielen kann man die Stelle, über die man gerade spricht, fokussieren:</p>
-            <pre><code class="java" data-noescape>
-public ^1^class^^ HelloWorld {
-    public static ^4^void^^ ^2^main^^(^3^String[] args^^) {
-        ^5^System.out.println("Hello World!");^^
-    }
+function makeBetterPi() {
+    pi += 4 * Math.pow(-1, count + 1)/(2*count - 1);
+    count++;
 }
-        </code></pre>
-        </section>
-
-        <section>
-            <h1>Animationen</h1>
-        </section>
-
-        <section>
-            <h2>Animierte Elemente</h2>
-
-            <div class="animated-html" style="height: 600px;">
-                <animation data-duration="500">
-                    <animate data-id="box" data-property="opacity" data-value="1"></animate>
-                </animation>
-                <animation data-duration="500">
-                    <animate data-id="box" data-property="top" data-value="400px"></animate>
-                    <animate data-id="box" data-property="left" data-value="400px"></animate>
-                </animation>
-
-                <div id="box"
-                     style="position: absolute; left: 200px; top: 200px; width: 400px; border: 1px solid black; opacity: 0;">
-                    Dieser Text wird sich bewegen
-                </div>
+            </code></pre>
+            <p class="fragment no-burn" data-fragment-index="1">synchron</p>
+            <pre class="fragment no-burn" data-fragment-index="1" style="width: 75%"><code class="hljs js" id="pi-sync" data-trim
+                                                                                           contenteditable>
+while (count < 1000000) {
+    makeBetterPi();
+    document.getElementById('pi-sync-out').textContent = pi;
+}
+            </code></pre>
+            <a class="fragment no-burn" data-fragment-index="1" style="display: inline-block; margin-right: 10%"
+               onclick="return runCode('better-pi', 'pi-sync')" href="#">Ausführen</a>
+            <div class="fragment no-burn" data-fragment-index="1" style="display: inline-block; width: 40%">
+                <pre><code data-trim id="pi-sync-out">0</code></pre>
             </div>
         </section>
-
         <section>
-            <h2>Animierte Elemente</h2>
+            <p>Berechne Pi</p>
+            <pre style="width: 75%"><code class="hljs js" id="better-pi2" data-trim contenteditable>
+var pi = 0, count = 1;
 
-            <p>SVG</p>
-
-            <div class="svg animated-svg" src="img/test/tng-animated.svg"
-                 style="margin-left: 320px; margin-top: 30px; width: 400px; height: 200px;">
-                <initial>
-                    <state data-id="TNG" data-property="opacity" data-value="0"></state>
-                    <state data-id="technology-consulting" data-property="opacity" data-value="0"></state>
-                </initial>
-                <animation data-duration="500">
-                    <animate data-id="TNG" data-property="opacity" data-value="1"></animate>
-                    <animate data-id="technology-consulting" data-property="opacity" data-value="1"></animate>
-                </animation>
-                <animation data-duration="500">
-                    <animate data-id="TNG" data-property="transform" data-value="translate(-114, 63)"></animate>
-                </animation>
-                <animation data-duration="500">
-                    <animate data-id="technology-consulting" data-property="transform"
-                             data-value="translate(113, -66)"></animate>
-                </animation>
+function makeBetterPi() {
+    pi += 4 * Math.pow(-1, count + 1)/(2*count - 1);
+    count++;
+}
+            </code></pre>
+            <p class="fragment no-burn" data-fragment-index="1">mit async</p>
+            <pre class="fragment no-burn" data-fragment-index="1" style="width: 75%"><code class="hljs js" id="pi-async" data-trim
+                                                                                           contenteditable>
+async.timesSeries(1000, (n, done) => {
+    do makeBetterPi();
+    while (count % 1000 !== 0);
+    document.getElementById('pi-async-out').textContent = pi;
+    setTimeout(done, 0);
+});
+            </code></pre>
+            <a class="fragment no-burn" data-fragment-index="1" style="display: inline-block; margin-right: 10%"
+               onclick="return runCode('better-pi2', 'pi-async')" href="#">Ausführen</a>
+            <div class="fragment no-burn" data-fragment-index="1" style="display: inline-block; width: 40%">
+                <pre><code data-trim id="pi-async-out">0</code></pre>
             </div>
         </section>
-
-
         <section>
-            <h1>Live-Editing</h1>
-        </section>
-
-        <section>
-            <h2>Worum geht's?</h2>
-
-            <ul class="no-burn">
-                <li>Live-Editor und Ausführung auf der Kommandozeile</li>
-                <li>Im Editor können Inhalte editiert werden</li>
-                <li>Im Präsentationsfenster werden sie sofort aktualisiert</li>
-                <li>Editierte Inhalte werden sofort gespeichert</li>
-                <li>Beliebige Kommandozeilenbefehle können ausgeführt werden</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>How To - Editor</h2>
-
-            <p class="no-burn">Für jedes File, das editiert werden soll:</p>
-            <ul class="no-burn">
-                <li>Im Element &lt;select&gt; das Attribut "data-base-path" auf den Basispfad ändern</li>
-                <li>Ein Eintrag &lt;option&gt; pro editierbarem File:</li>
-                <li>
-                    <ul class="no-burn" style="margin-top: 20px;">
-                        <li>Attribut "data-file": Dateiname relativ zum Basispfad</li>
-                        <li>Attribut "data-language": Verwendete Sprache</li>
-                        <li>Attribut "data-execute": Befehl für die Ausführung</li>
-                    </ul>
-                </li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>How To - Präsentation</h2>
-
-            <p>Anzeige des Codes einer Datei:</p>
-
-            <ul class="no-burn">
-                <li>HTML-Elemente &lt;pre&gt;&lt;code&gt; anlegen:</li>
-                <li>Dem Code-Tag eine ID geben</li>
-                <li>Attribut "data-file": Dateiname (inkl. Basispfad)</li>
-                <li>Attribut "data-language": Verwendete Sprache</li>
-            </ul>
-
-            <p style="margin-top: 30px;">Anzeige des Outputs der Ausführung:</p>
-            <ul class="no-burn">
-                <li>Den Block mit Klasse "output-section" kopieren</li>
-                <li>Attribut "data-file" des &lt;code&gt;-Tage:<br/> Dateiname (inkl Basispfad)</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Python-Test 1</h2>
-
-            <p>Editor: <a href="editor.html" target="_blank">editor.html</a></p>
-            <pre><code id="viewer-python-test-1" class="viewer"
-                       data-file="live-edit/src/echo1.py" data-language="python"
-                       style="height: 350px;" data-noescape></code></pre>
-
-            <div class="output-section" data-file="live-edit/src/echo1.py">
-                <p>Output:</p>
-                <pre class="output"></pre>
-            </div>
-        </section>
-
-        <section>
-            <h2>Python-Test 2</h2>
-
-            <p>Editor: <a href="editor.html" target="_blank">editor.html</a></p>
-            <pre><code id="viewer-python-test-2" class="viewer"
-                       data-file="live-edit/src/echo2.py" data-language="python"
-                       style="height: 350px;" data-noescape></code></pre>
-
-            <div class="output-section" data-file="live-edit/src/echo2.py">
-                <p>Output:</p>
-                <pre class="output"></pre>
-            </div>
+            <p>
+                async sorgt für
+            </p>
+            <h2>flüssige Animationen</h2>
+            <p class="fragment no-burn">aber</p>
+            <h2 class="fragment no-burn">async verschwendet Zeit!</h2>
+            <p class="fragment">Kann man das optimieren?</p>
         </section>
     </section>
 
-    <section data-title="Weitere Features">
+    <section data-title="performance.now">
         <section>
-            <h2>SpeakerView</h2>
-
-            <ul class="no-burn">
-                <li>Zum Start der Speaker View 's' drücken</li>
-                <li>Oder '?notes' an die URL anhängen <br/> (vor dem Fragment-Identifier '#')</li>
-                <li>In der Upcoming-Section werden folgende <br/> Fragmente/Slides angezeigt</li>
+            <h3>
+                Messen, nicht glauben, mit
+            </h3>
+            <h1>
+                performance.now
+            </h1>
+        </section>
+        <section>
+            <h2>performance.now()</h2>
+            <ul>
+                <li class="fragment no-burn">Liefert "high resolution time stamp": +/- 0.001ms</li>
+                <li class="fragment">Date.now(): +/- 10ms</li>
+                <li class="fragment">Timestamp ist relativ zum Programmstart</li>
+                <li class="fragment">Verfügbar in allen modernen Browsern</li>
             </ul>
         </section>
-
         <section>
-            <h2>PDF erzeugen</h2>
+            <p>Nochmals Pi</p>
+            <pre style="width: 75%"><code class="hljs js" id="better-pi3" data-trim contenteditable>
+var pi = 0, count = 1;
 
-            <ul class="no-burn">
-                <li>'?print-pdf' an die URL anhängen <br/> (vor dem Fragment-Identifier '#')</li>
-                <li>Dann kann über den normalen Druckdialog <br/> gedruckt werden</li>
-                <li>Druckränder beachten!</li>
-            </ul>
+function makeBetterPi() {
+    pi += 4 * Math.pow(-1, count + 1)/(2*count - 1);
+    count++;
+}
+            </code></pre>
+            <p class="fragment no-burn" data-fragment-index="1">mit einer selbstoptimierenden Schleife</p>
+            <pre class="fragment no-burn" data-fragment-index="1" style="width: 75%"><code class="hljs js" id="pi-opt" data-trim
+                                                                                           contenteditable>
+async.whilst(() => count < 1000000, done => {
+    const startTime = performance.now();
+    do makeBetterPi();
+    while (performance.now() - startTime < 5);
+    document.getElementById('pi-opt-out').textContent = pi;
+    setTimeout(done, 0);
+});
+            </code></pre>
+            <a class="fragment no-burn" data-fragment-index="1" style="display: inline-block; margin-right: 10%"
+               onclick="return runCode('better-pi3', 'pi-opt')" href="#">Ausführen</a>
+            <div class="fragment no-burn" data-fragment-index="1" style="display: inline-block; width: 40%">
+                <pre><code data-trim id="pi-opt-out">0</code></pre>
+            </div>
+        </section>
+        <section>
+            <h2>Viel besser!</h2>
+            <p class="fragment no-burn" data-fragment-index="1">aber</p>
+            <p class="fragment no-burn" data-fragment-index="2">Warum war <code>setTimeout(…,0)</code> so</p>
+            <h2 class="fragment no-burn" data-fragment-index="2">langsam?</h2>
         </section>
     </section>
 
-    <section data-title="Getting Started">
+    <section data-title="setQuickTimeout">
         <section>
-            <h2>Wie erzeuge ich meine Präsentation?</h2>
-            <ol class="no-burn">
-                <li>
-                    Hier findet sich das
-                    <a href="https://bitbucket.int.tngtech.com/projects/TNG/repos/reveal-presentation-template/browse">Git-Repository</a>
-                </li>
-                <li>Vorlage auschecken:
-                    <pre style="width: 950px;"><code class="bash">$ git clone \
-  ssh://git@bitbucket.int.tngtech.com:122/tng/reveal-presentation-template.git</code></pre>
-                </li>
-                <li>index.html ansehen und anpassen</li>
-                <li>Push in ein eigenes (neues) Repository</li>
-            </ol>
+            <h3>
+                Gibt es ein
+            </h3>
+            <h1>
+                setQuickTimeout?
+            </h1>
+        </section>
+        <section>
+            <p>Browsers können <code>setTimeout</code> auf</p>
+            <h2 class="fragment no-burn" data-fragment-index="1">>4ms</h2>
+            <p class="fragment no-burn" data-fragment-index="1">beschränken!</p>
+            <p class="fragment no-burn" data-fragment-index="2">(und <em>>1000ms</em> in inaktiven Tabs!)</p>
+        </section>
+        <section>
+            <h2><code>setTimeout</code> im Browser</h2>
+            <pre class="fragment no-burn" data-fragment-index="1"><code class="hljs js" id="timeout" data-trim contenteditable>
+var startTime = performance.now();
+
+function printTime() {
+    document.getElementById('timeout-out').textContent +=
+        (performance.now() - startTime) + '\n';
+}
+
+setTimeout(printTime, 0);
+            </code></pre>
+            <a class="fragment no-burn" data-fragment-index="1" style="display: inline-block; margin-right: 10%; margin-top: 2%"
+               onclick="return runCode('timeout')" href="#">Ausführen</a>
+            <div class="fragment no-burn" data-fragment-index="1" style="display: inline-block; width: 40%; vertical-align: top">
+                <pre><code style="min-height: 1em" data-trim id="timeout-out"></code></pre>
+            </div>
+        </section>
+        <section>
+            <h2>Schneller als <code>setTimeout</code></h2>
+            <pre class="fragment no-burn" data-fragment-index="1"><code class="hljs js" id="post-message" data-trim contenteditable>
+var startTime = performance.now();
+
+function printTime() {
+    window.removeEventListener('message', printTime, true)
+    document.getElementById('post-out').textContent +=
+        (performance.now() - startTime) + '\n';
+}
+
+window.addEventListener('message', printTime, true);
+window.postMessage('mymessage', '*');
+            </code></pre>
+            <a class="fragment no-burn" data-fragment-index="1" style="display: inline-block; margin-right: 10%; margin-top: 2%"
+               onclick="return runCode('post-message')" href="#">Ausführen</a>
+            <div class="fragment no-burn" data-fragment-index="1" style="display: inline-block; width: 40%; vertical-align: top">
+                <pre><code style="min-height: 1em" data-trim id="post-out"></code></pre>
+            </div>
+        </section>
+        <section>
+            <h2>Gute Polyfills</h2>
+            <ul>
+                <li class="fragment no-burn"><a href="https://github.com/yuzujs/setImmediate">setimmediate</a></li>
+                <li class="fragment no-burn"><a href="https://github.com/taylorhakes/setAsap">setasap</a></li>
+            </ul>
+        </section>
+        <section>
+            <p>aber</p>
+            <p class="fragment no-burn">geht es</p>
+            <h2 class="fragment no-burn">NOCH schneller?</h2>
+        </section>
+    </section>
+
+    <section data-title="Web Worker">
+        <section>
+            <h1>
+                Web Worker
+            </h1>
+            <h3>
+                Wenn es mal wieder länger dauert
+            </h3>
+        </section>
+        <section>
+            <h2>Web Worker</h2>
+            <ul>
+                <li>arbeiten echt parallel in einem eigenen Thread!</li>
+                <li>in allen modernen Browsern verfügbar</li>
+                <li>striktes Sandboxing gegenüber anderen Threads</li>
+                <li>Kommunikation über <code>postMessage(…)</code></li>
+                <li>Nur Austausch von reinen Datenobjekten</li>
+                <li>Kein Zugriff auf DOM oder <code>window</code></li>
+            </ul>
+            <p class="fragment no-burn">aber</p>
+            <ul>
+                <li>Worker können eigene Netzwerk-Requests absetzen</li>
+            </ul>
+        </section>
+        <section>
+            <h2>Einfaches Beispiel</h2>
+            <pre><code class="hljs js" id="worker" data-trim contenteditable>
+var worker = new Worker('workerFile.js');
+worker.addEventListener('message', function(message) {
+    console.log(message.data);
+});
+
+worker.postMessage('Hallo Worker!');
+            </code></pre>
+            <p class="fragment no-burn" data-fragment-index="1"><code>workerFile.js</code></p>
+            <pre class="fragment no-burn" data-fragment-index="1"><code class="hljs js" data-trim>
+self.addEventListener('message', function(message) {
+  console.log('Received: ', message.data);
+  for (var i = 0; i < 1000000000; i++) {
+    if (i % 100000000 === 0) self.postMessage(i);
+  }
+});
+            </code></pre>
+            <a class="fragment no-burn" data-fragment-index="1" onclick="return runCode('worker')" href="#">Ausführen</a>
+        </section>
+        <section>
+
         </section>
     </section>
 
     <!-- Danke Slide -->
     <section>
-        <h1>Vielen Dank!</h1>
+        <section>
+            <h1>Vielen Dank!</h1>
 
-        <h2>Bei Fragen zur Hilfe:</h2>
-
-        <div>
-            <img style="height: 200px" src="img/test/ThomasEndres.jpg">
-            <img style="height: 200px" src="img/test/EricWeikl.jpg">
-            <img style="height: 200px" src="img/test/MichaelPisula.png">
-        </div>
-        <p>
-            <a href="mailto:john.doe@tngtech.com">john.doe@tngtech.com</a><br>
-            <a href="http://www.twitter.com/johndoe">@johndoe</a>
-        </p>
-        <a href="http://www.tngtech.com"><img class="logo" src="img/tng.svg"></a>
+            <p>
+                <a href="mailto:lukas@tngtech.com">lukas.taegert@tngtech.com</a><br>
+            </p>
+            <a href="http://www.tngtech.com"><img class="logo" src="img/tng.svg"></a>
+        </section>
+        <section data-markdown>
+        </section>
     </section>
 
 </body>
