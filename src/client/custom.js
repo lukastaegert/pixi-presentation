@@ -1,15 +1,15 @@
-window.runCode = (id, id2) => {
-  eval(document.getElementById(id).textContent);
-  if (id2) {
-    eval(document.getElementById(id2).textContent);
-  }
+window.runCode = (...ids) => {
+  eval(ids.map(id => document.getElementById(id).textContent).join(';'));
   return false;
 };
 
 window.measure = (prepareId, sourceId, printId) => {
-  eval(document.getElementById(prepareId).textContent);
-  const startTime = performance.now();
-  eval(document.getElementById(sourceId).textContent);
-  document.getElementById(printId).textContent += (performance.now() - startTime) + '\n';
+  eval(
+    (prepareId && document.getElementById(prepareId).textContent) +
+    'const startTime = performance.now();' +
+    document.getElementById(sourceId).textContent +
+    'const time = performance.now() - startTime;' +
+    'document.getElementById("' + printId + '").textContent += time + "\\n";'
+  );
   return false;
 };
