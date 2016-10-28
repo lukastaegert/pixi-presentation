@@ -19,13 +19,7 @@
     <script src="src/client/async.js"></script>
 </head>
 
-<!--
-  Wofür stehen die CSS-Klassen?
-  charred: Charred-Trail-Plugin aktivieren,
-  auto-fragment: alle <li> innerhalb von <ul> und <ol> in Fragments umwandeln, d.h. bei Tastendruck erst einblenden
--->
 <body class="charred auto-fragment">
-
     <!-- Titel-Slide -->
     <section>
         <h3>Wie man</h3>
@@ -38,8 +32,11 @@
         <a href="http://www.tngtech.com"><img class="logo" src="img/tng.svg"></a>
     </section>
 
-    <!-- Inhalt ab hier, für eigene Präsentationen einfach löschen -->
-    <!-- Gibt man data-title="foo" an, wird eine Übersichtseite mit Links hier in die Präsentation eingefügt -->
+    <section>
+        <h3>Wahrgenommene Performance &ne; Geschwindigkeit</h3>
+        <img src="img/matrix.gif">
+    </section>
+
     <section data-title="Animation Frames">
         <section>
             <h1>Animation Frames</h1>
@@ -51,7 +48,7 @@
                 <li class="fragment">Synchronisieren Funktionsaufrufe mit der Bildwiederholrate<br>("animation frame")</li>
                 <li class="fragment">Angefordert mit <code>window.requestAnimationFrame(…)</code></li>
                 <li class="fragment">Maximal 60 Animation Frames pro Sekunde</li>
-                <li class="fragment">CSS Animationen benutzen die gleichen Frames</li>
+                <li class="fragment">Alle Programmteile benutzen die gleichen Frames</li>
             </ul>
         </section>
         <section>
@@ -120,9 +117,10 @@ requestAnimationFrame(measureFrameRate);
                 Animation Frames, die<br>
                 in der Summe länger als 16ms dauern
             </p>
-            <h2 class="fragment no-burn">
+            <h2 class="fragment no-burn" data-fragment-index="1">
                 blockieren das UI
             </h2>
+            <img class="fragment no-burn" data-fragment-index="1" src="img/block.gif">
         </section>
     </section>
 
@@ -328,8 +326,9 @@ window.postMessage('mymessage', '*');
         </section>
         <section>
             <p>aber</p>
-            <p class="fragment no-burn">geht es</p>
-            <h2 class="fragment no-burn">NOCH schneller?</h2>
+            <p class="fragment no-burn" data-fragment-index="1">geht es</p>
+            <h2 class="fragment no-burn" data-fragment-index="2">NOCH schneller?</h2>
+            <img class="fragment no-burn" data-fragment-index="2" src="img/twins.gif">
         </section>
     </section>
 
@@ -371,7 +370,7 @@ worker.postMessage('Hallo Worker!');
             <p class="fragment no-burn" data-fragment-index="1"><code>workerFile.js</code></p>
             <pre class="fragment no-burn" data-fragment-index="1"><code class="hljs js" data-trim>
 self.addEventListener('message', message => {
-  console.log('Received: ', message.data);
+  console.log('Received: ' + message.data);
   for (let i = 0; i < 1000000000; i++) {
     if (i % 100000000 === 0) self.postMessage(i);
   }
@@ -390,6 +389,7 @@ self.addEventListener('message', message => {
             <p>Was ist, wenn der Code einfach</p>
             <h2 class="fragment no-burn" data-fragment-index="1">zu langsam</h2>
             <p class="fragment no-burn" data-fragment-index="1">ist?</p>
+            <img class="fragment no-burn" data-fragment-index="1" src="img/speed.gif">
         </section>
     </section>
 
@@ -591,6 +591,9 @@ for (let i = 0; i < 10000; i++)
     <section>
         <section>
             <h1>Vielen Dank!</h1>
+            <p class="fragment no-burn" data-fragment-index="1">Interaktive Slides:</p>
+            <h3 class="fragment no-burn" data-fragment-index="1"><a href="https://homedir.tngtech.com/~taegertl/js-performance">homedir.tngtech.com/~taegertl/<br>js-performance</a>
+            </h3>
 
             <p>
                 <a href="mailto:lukas@tngtech.com">lukas.taegert@tngtech.com</a><br>
