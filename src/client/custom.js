@@ -46,9 +46,7 @@ function initPixiSlide(slideName, onGetRunCodeHook, onEnterSlide, onTeardown, on
   var requestReactivate = false;
 
   function requestUpdateCanvasSize() {
-    console.log('request update size')
     window.requestAnimationFrame(function() {
-      console.log('update size')
       onResize && onResize();
       renderer && renderer.resize(renderer.view.clientWidth, renderer.view.clientHeight);
     });
@@ -57,23 +55,19 @@ function initPixiSlide(slideName, onGetRunCodeHook, onEnterSlide, onTeardown, on
   function onEnter() {
     origRequestAnimationFrame = window.requestAnimationFrame;
     isActive = true;
-    console.log('replace RAF')
     window.requestAnimationFrame = function() {
       if (isActive) {
         origRequestAnimationFrame.apply(this, arguments);
       } else {
-        console.log('inactive frame')
         if (!hasBecomeInactive) {
           hasBecomeInactive = true;
           origRequestAnimationFrame(function() {
             hasBecomeInactive = false;
             if (requestReactivate) {
-              console.log('reactivate frame')
               isActive = true;
               requestReactivate();
               requestReactivate = false;
             } else {
-              console.log('restore RAF')
               window.requestAnimationFrame = origRequestAnimationFrame;
             }
           });
@@ -87,10 +81,22 @@ function initPixiSlide(slideName, onGetRunCodeHook, onEnterSlide, onTeardown, on
     onTeardown && onTeardown();
     isActive = false;
     requestReactivate = false;
+    window.requestAnimationFrame(function() {});
+  }
+
+  function recreateCanvas() {
+    var oldCanvas = document.getElementById('canvas-' + slideName);
+    var canvasParent = oldCanvas.parentNode;
+    var newCanvas = document.createElement('canvas');
+    newCanvas.id = oldCanvas.id;
+    newCanvas.style.width ='100%';
+    newCanvas.style.height ='100%';
+    canvasParent.removeChild(oldCanvas);
+    canvasParent.appendChild(newCanvas);
   }
 
   function runCode(onRunCode) {
-    console.log('actually running code')
+    recreateCanvas();
     var origAutoDetectRenderer = PIXI.autoDetectRenderer;
     PIXI.autoDetectRenderer = function() {
       renderer = origAutoDetectRenderer.apply(this, arguments);
@@ -104,10 +110,8 @@ function initPixiSlide(slideName, onGetRunCodeHook, onEnterSlide, onTeardown, on
   }
 
   function requestRunCode(onRunCode) {
-    console.log('request run code')
     isActive = false;
     requestReactivate = function() {
-      console.log('run reactivated code')
       runCode(onRunCode)
     };
     window.requestAnimationFrame(function() {});
@@ -117,31 +121,20 @@ function initPixiSlide(slideName, onGetRunCodeHook, onEnterSlide, onTeardown, on
   addSlideListener(slideName, onEnter, onLeave);
 }
 
-// === Structure slide
-(function() {
-  var SLIDE_NAME = 'structure';
-
+// === Run editable code
+function initEditSlide(slideName) {
   function onGetRunCodeHook(runCodeHook) {
-    console.log('set window.runCode')
     window.runCode = function() {
-      console.log('running code')
       var commands = Array.prototype.slice.call(arguments).map(function(id) {return document.getElementById(id).textContent});
       runCodeHook(function() {eval(commands.join(';'));});
       return false;
     };
   }
 
-  function onEnter() {
-  }
+  initPixiSlide(slideName, onGetRunCodeHook);
+}
 
-  function onTeardown() {
-  }
-
-  function onResize() {
-  }
-
-  initPixiSlide(SLIDE_NAME, onGetRunCodeHook, onEnter, onTeardown, onResize);
-}());
+initEditSlide('structure');
 
 // === Initial presentation
 (function() {
@@ -242,8 +235,6 @@ function initPixiSlide(slideName, onGetRunCodeHook, onEnterSlide, onTeardown, on
           isLogoRotating = true;
           logoContainer.removeChild(title);
         } else {
-          console.log('cats.length', cats.length)
-          console.log('add', Math.min(Math.max(cats.length, 1), MAX_CATS - cats.length))
           addCats(Math.min(Math.max(cats.length, 1), MAX_CATS - cats.length));
         }
       });

@@ -15,7 +15,7 @@
 
     <link rel="stylesheet" href="style/presentation.css">
     <script src="src/client/presentation.js"></script>
-    <script src="src/client/react-pixi.js"></script>
+    <script src="src/client/pixi.js"></script>
     <script src="src/client/custom.js"></script>
 </head>
 
@@ -51,16 +51,19 @@
         </section>
         <section data-slidename="structure">
             <div style="display:flex;width:1024px;height:768px;">
-                <canvas style="flex:1;width: 100%;height:100%;background-color:black;" id="canvas-structure"></canvas>
-                <div style="flex:1">
-<pre><code class="hljs js" id="structure" data-trim contenteditable>var renderer =
+                <div style="width:500px;">
+                    <canvas style="width: 100%;height:100%;background-color:black;" id="canvas-structure"></canvas>
+                </div>
+                <div style="width:524px;">
+<pre><code class="hljs js" id="structure" data-trim contenteditable style="width:100%;">var renderer =
   PIXI.autoDetectRenderer(
-    512, 768, {
-      view: document
-        .getElementById('canvas-structure')
+    500, 768, {
+      view: document.getElementById(
+            'canvas-structure')
     });
 
 var stage = new PIXI.Container();
+
 var rect = new PIXI.Graphics()
   .beginFill(0xff0000)
   .drawRect(-100, -50, 200, 100)
@@ -69,15 +72,47 @@ stage.addChild(rect);
 
 rect.position.set(256, 384);
 
-function performAnimationLoop() {
-  rect.rotation += 0.01;
-  renderer.render(stage);
-  window.requestAnimationFrame(performAnimationLoop);
-}
-
-performAnimationLoop();
+renderer.render(stage);
+renderer.render(stage);
+renderer.render(stage);
 </code></pre>
                     <a onclick="return runCode('structure')" href="#">Ausführen</a>
+                </div>
+            </div>
+        </section>
+        <section data-slidename="animation">
+            <div style="display:flex;width:1024px;height:768px;">
+                <div style="width:500px;">
+                    <canvas style="width: 100%;height:100%;background-color:black;" id="canvas-animation"></canvas>
+                </div>
+                <div style="width:524px;">
+                    <!--<pre><code class="hljs js" id="animation" data-trim contenteditable style="width:100%;">var renderer =-->
+                    <!--PIXI.autoDetectRenderer(-->
+                    <!--512, 768, {-->
+                    <!--view: document.getElementById(-->
+                    <!--'canvas-animation')-->
+                    <!--});-->
+
+                    <!--var stage = new PIXI.Container();-->
+
+                    <!--var rect = new PIXI.Graphics()-->
+                    <!--.beginFill(0xff0000)-->
+                    <!--.drawRect(-100, -50, 200, 100)-->
+                    <!--.endFill();-->
+                    <!--stage.addChild(rect);-->
+
+                    <!--rect.position.set(256, 384);-->
+
+                    <!--function performAnimationLoop() {-->
+                    <!--rect.rotation += 0.01;-->
+                    <!--renderer.render(stage);-->
+                    <!--window.requestAnimationFrame(-->
+                    <!--performAnimationLoop);-->
+                    <!--}-->
+
+                    <!--performAnimationLoop();-->
+                    <!--</code></pre>-->
+                    <!--<a onclick="return runCode('animation')" href="#">Ausführen</a>-->
                 </div>
             </div>
         </section>
