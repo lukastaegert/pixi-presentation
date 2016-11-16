@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8">
 
-    <title>Wie man JavaScript schnell macht</title>
+    <title>Kick up your game mit Pixi.js</title>
 
-    <meta name="description" content="Wie man JavaScript schnell macht (oder die Illusion erweckt)">
+    <meta name="description" content="Kick up your game mit Pixi.js">
     <meta name="author" content="Lukas Taegert">
 
     <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -15,575 +15,71 @@
 
     <link rel="stylesheet" href="style/presentation.css">
     <script src="src/client/presentation.js"></script>
+    <script src="src/client/react-pixi.js"></script>
     <script src="src/client/custom.js"></script>
-    <script src="src/client/async.js"></script>
 </head>
 
 <body class="charred auto-fragment">
     <!-- Titel-Slide -->
     <section>
-        <h3>Wie man</h3>
-        <h1>JavaScript schnell</h1>
-        <h3>macht (oder die Illusion erweckt)</h3>
+        <h3>Kick up your game mit</h3>
+        <h1>Pixi.js</h1>
         <p style="padding-top:5%">
             <a href="mailto:lukas.taegert@tngtech.com">Lukas Taegert</a>
         </p>
-        <p>TechDay@Unterföhring, 2016-10-28</p>
+        <p>e-fellows.net IT Day, 2016-11-25</p>
         <a href="http://www.tngtech.com"><img class="logo" src="img/tng.svg"></a>
     </section>
 
-    <section>
-        <h3>Wahrgenommene Performance &ne; Geschwindigkeit</h3>
-        <img src="img/matrix.gif">
+    <section data-slidename="intro" style="width:1024px;height:768px;" id="intro-container">
+        <canvas id="canvas-intro" style="width:100%;height:100%;"></canvas>
     </section>
 
-    <section data-title="Animation Frames">
+    <section data-title="Aufbau eines Projektes">
         <section>
-            <h1>Animation Frames</h1>
-            <h3>60FPS ist das Maß der Dinge</h3>
+            <h1>Aufbau</h1>
+            <h3>eines Pixi Projektes</h3>
         </section>
         <section>
-            <h2>Was sind Animation Frames?</h2>
+            <h2>Schritte</h2>
             <ul>
-                <li class="fragment">Synchronisieren Funktionsaufrufe mit der Bildwiederholrate<br>("animation frame")</li>
-                <li class="fragment">Angefordert mit <code>window.requestAnimationFrame(…)</code></li>
-                <li class="fragment">Maximal 60 Animation Frames pro Sekunde</li>
-                <li class="fragment">Alle Programmteile benutzen die gleichen Frames</li>
+                <li>Renderer verwaltet ein <code style="color:#0000FF;">&lt;canvas&gt;</code> Element</li>
+                <li>Szene = <code style="color:#0000FF;">PIXI.Container</code> - Objekt</li>
+                <li>Objekte mittels <code style="color:#0000FF;">.addChild</code> hinzufügen</li>
+                <li>Rendern!</li>
             </ul>
         </section>
-        <section>
-            <p>Animation Frames werden</p>
-            <h2>aggregiert</h2>
-            <p>und als synchroner Block ausgeführt</p>
-            <div class="fragment no-burn" data-fragment-index="1" style="width: 60%; display:inline-block"><pre><code class="hljs js"
-                                                                                                                      id="aggregate-frames"
-                                                                                                                      data-trim
-                                                                                                                      contenteditable>
-function printTimeStamp(timeStamp) {
-    document.getElementById('agg-out')
-        .textContent += timeStamp + '\n';
+        <section data-slidename="structure">
+            <div style="display:flex;width:1024px;height:768px;">
+                <canvas style="flex:1;width: 100%;height:100%;background-color:black;" id="canvas-structure"></canvas>
+                <div style="flex:1">
+<pre><code class="hljs js" id="structure" data-trim contenteditable>var renderer =
+  PIXI.autoDetectRenderer(
+    512, 768, {
+      view: document
+        .getElementById('canvas-structure')
+    });
+
+var stage = new PIXI.Container();
+var rect = new PIXI.Graphics()
+  .beginFill(0xff0000)
+  .drawRect(-100, -50, 200, 100)
+  .endFill();
+stage.addChild(rect);
+
+rect.position.set(256, 384);
+
+function performAnimationLoop() {
+  rect.rotation += 0.01;
+  renderer.render(stage);
+  window.requestAnimationFrame(performAnimationLoop);
 }
 
-// Those all fire at the same time
-requestAnimationFrame(printTimeStamp);
-for (let i = 0; i < 1000; i++) {}
-requestAnimationFrame(printTimeStamp);
-requestAnimationFrame(printTimeStamp);
-for (let i = 0; i < 1000; i++) {}
-requestAnimationFrame(printTimeStamp);
-            </code></pre>
+performAnimationLoop();
+</code></pre>
+                    <a onclick="return runCode('structure')" href="#">Ausführen</a>
+                </div>
             </div>
-            <div class="fragment no-burn" data-fragment-index="1" style="width: 30%; display:inline-block; vertical-align: top">
-                <pre><code data-trim id="agg-out" style="max-height: 15em; min-height: 1em"></code></pre>
-            </div>
-            <a class="fragment no-burn" data-fragment-index="1" style="display: block" onclick="return runCode('aggregate-frames')"
-               href="#">Ausführen</a>
-        </section>
-        <section>
-            <p>Messen der aktuellen Frame Rate mit einer</p>
-            <h2>Animation Loop</h2>
-            <div class="fragment no-burn" data-fragment-index="1" style="width: 65%; display:inline-block"><pre><code class="hljs js"
-                                                                                                                      id="loop" data-trim
-                                                                                                                      contenteditable>
-let startTime = 0, counter = 0;
-
-const measureFrameRate = timeStamp => {
-    if (counter < 9) counter++;
-    else {
-        counter = 0;
-        document.getElementById('loop-out')
-            .textContent = 10000 /
-            (timeStamp - startTime);
-        startTime = timeStamp;
-    }
-    !isStopped &&
-        requestAnimationFrame(measureFrameRate);
-}
-
-requestAnimationFrame(measureFrameRate);
-            </code></pre>
-            </div>
-            <div class="fragment no-burn" data-fragment-index="1" style="width: 25%; display:inline-block; vertical-align: top">
-                <pre><code data-trim id="loop-out" style="max-height: 15em; min-height: 1em"></code></pre>
-            </div>
-            <a class="fragment no-burn" data-fragment-index="1" style="display: inline-block; margin-right: 10%"
-               onclick="window.isStopped = false; return runCode('loop')" href="#">Ausführen</a>
-            <a class="fragment no-burn" data-fragment-index="1" style="display: inline-block"
-               onclick="window.isStopped = true; return false" href="#">Stop</a>
-        </section>
-        <section>
-            <p>
-                Lange Berechnungen oder<br>
-                Animation Frames, die<br>
-                in der Summe länger als 16ms dauern
-            </p>
-            <h2 class="fragment no-burn" data-fragment-index="1">
-                blockieren das UI
-            </h2>
-            <img class="fragment no-burn" data-fragment-index="1" src="img/block.gif">
-        </section>
-    </section>
-
-    <section data-title="Synchron wird asynchron">
-        <section>
-            <h3>Aus synchron mach</h3>
-            <h1>asynchron</h1>
-        </section>
-        <section>
-            <p>
-                Braucht Dein Code
-            </p>
-            <h2>
-                zu lange?
-            </h2>
-            <pre class="fragment no-burn" data-fragment-index="1" style="width:70%"><code class="hljs js" id="console-time" data-trim
-                                                                                          contenteditable>
-console.time('myTimer');
-
-for (let i = 0; i < 100000; i++) {}
-
-console.timeEnd('myTimer');
-                </code></pre>
-            <a class="fragment no-burn" data-fragment-index="1" style="display: inline-block" onclick="return runCode('console-time')"
-               href="#">Ausführen</a>
-        </section>
-        <section>
-            <p>Hilfreich zum Aufspalten langer Berechnungen:</p>
-            <h2>
-                <a href="http://caolan.github.io/async/"><img style="width: 30%" src="img/async-logo.svg"></a>
-            </h2>
-            <a href="http://caolan.github.io/async/">caolan.github.io/async</a>
-            <p class="fragment">Sammlung von Tools, um verschiedenste Codestrukturen<br>asynchron zu machen</p>
-        </section>
-        <section>
-            <p>Berechne Pi</p>
-            <pre style="width: 75%"><code class="hljs js" id="better-pi" data-trim contenteditable>
-let pi = 0, count = 1;
-const makeBetterPi = () => {
-    pi += 4 * Math.pow(-1, count + 1)/(2*count - 1);
-    count++;
-}
-            </code></pre>
-            <p class="fragment no-burn" data-fragment-index="1">synchron</p>
-            <pre class="fragment no-burn" data-fragment-index="1" style="width: 75%"><code class="hljs js" id="pi-sync" data-trim
-                                                                                           contenteditable>
-while (count < 1000000) {
-    makeBetterPi();
-    document.getElementById('pi-sync-out').textContent = pi;
-}
-            </code></pre>
-            <a class="fragment no-burn" data-fragment-index="1" style="display: inline-block; margin-right: 10%"
-               onclick="return runCode('better-pi', 'pi-sync')" href="#">Ausführen</a>
-            <div class="fragment no-burn" data-fragment-index="1" style="display: inline-block; width: 40%">
-                <pre><code data-trim id="pi-sync-out">0</code></pre>
-            </div>
-        </section>
-        <section>
-            <p>Berechne Pi</p>
-            <pre style="width: 75%"><code class="hljs js" id="better-pi2" data-trim contenteditable>
-let pi = 0, count = 1;
-const makeBetterPi = () => {
-    pi += 4 * Math.pow(-1, count + 1)/(2*count - 1);
-    count++;
-}
-            </code></pre>
-            <p class="fragment no-burn" data-fragment-index="1">mit async</p>
-            <pre class="fragment no-burn" data-fragment-index="1" style="width: 75%"><code class="hljs js" id="pi-async" data-trim
-                                                                                           contenteditable>
-async.timesSeries(1000, (n, done) => {
-    do makeBetterPi();
-    while (count % 1000 !== 0);
-    document.getElementById('pi-async-out').textContent = pi;
-    setTimeout(done, 0);
-});
-            </code></pre>
-            <a class="fragment no-burn" data-fragment-index="1" style="display: inline-block; margin-right: 10%"
-               onclick="return runCode('better-pi2', 'pi-async')" href="#">Ausführen</a>
-            <div class="fragment no-burn" data-fragment-index="1" style="display: inline-block; width: 40%">
-                <pre><code data-trim id="pi-async-out">0</code></pre>
-            </div>
-        </section>
-        <section>
-            <p>
-                async sorgt für
-            </p>
-            <h2>flüssige Animationen</h2>
-            <p class="fragment no-burn">aber</p>
-            <h2 class="fragment no-burn">async verschwendet Zeit!</h2>
-            <p class="fragment">Kann man das optimieren?</p>
-        </section>
-    </section>
-
-    <section data-title="performance.now">
-        <section>
-            <h3>
-                Messen, nicht glauben, mit
-            </h3>
-            <h1>
-                performance.now
-            </h1>
-        </section>
-        <section>
-            <h2>performance.now()</h2>
-            <ul>
-                <li class="fragment">Liefert "high resolution time stamp": +/- 0.001ms</li>
-                <li class="fragment">Date.now(): +/- 10ms</li>
-                <li class="fragment">Timestamp ist relativ zum Programmstart</li>
-                <li class="fragment">Verfügbar in allen modernen Browsern</li>
-            </ul>
-        </section>
-        <section>
-            <p>Nochmals Pi</p>
-            <pre style="width: 75%"><code class="hljs js" id="better-pi3" data-trim contenteditable>
-let pi = 0, count = 1;
-const makeBetterPi = () => {
-    pi += 4 * Math.pow(-1, count + 1)/(2*count - 1);
-    count++;
-}
-            </code></pre>
-            <p class="fragment no-burn" data-fragment-index="1">mit einer selbstoptimierenden Schleife</p>
-            <pre class="fragment no-burn" data-fragment-index="1" style="width: 75%"><code class="hljs js" id="pi-opt" data-trim
-                                                                                           contenteditable>
-async.whilst(() => count < 1000000, done => {
-    const startTime = performance.now();
-    do makeBetterPi();
-    while (performance.now() - startTime < 2);
-    document.getElementById('pi-opt-out').textContent = pi;
-    setTimeout(done, 0);
-});
-            </code></pre>
-            <a class="fragment no-burn" data-fragment-index="1" style="display: inline-block; margin-right: 10%"
-               onclick="return runCode('better-pi3', 'pi-opt')" href="#">Ausführen</a>
-            <div class="fragment no-burn" data-fragment-index="1" style="display: inline-block; width: 40%">
-                <pre><code data-trim id="pi-opt-out">0</code></pre>
-            </div>
-        </section>
-        <section>
-            <h2>Viel besser!</h2>
-            <p class="fragment no-burn" data-fragment-index="1">aber</p>
-            <p class="fragment no-burn" data-fragment-index="2">Warum war <code>setTimeout(…,0)</code> so</p>
-            <h2 class="fragment no-burn" data-fragment-index="2">langsam?</h2>
-        </section>
-    </section>
-
-    <section data-title="setQuickTimeout">
-        <section>
-            <h3>
-                Gibt es ein
-            </h3>
-            <h1>
-                setQuickTimeout?
-            </h1>
-        </section>
-        <section>
-            <p>Browsers können <code>setTimeout</code> auf</p>
-            <h2 class="fragment no-burn" data-fragment-index="1">>4ms</h2>
-            <p class="fragment no-burn" data-fragment-index="1">beschränken!</p>
-            <p class="fragment no-burn" data-fragment-index="2">(und <em>>1000ms</em> in inaktiven Tabs!)</p>
-        </section>
-        <section>
-            <h2><code>setTimeout</code> im Browser</h2>
-            <pre class="fragment no-burn" data-fragment-index="1"><code class="hljs js" id="timeout" data-trim contenteditable>
-const startTime = performance.now();
-const printTime = () => {
-    document.getElementById('timeout-out').textContent +=
-        (performance.now() - startTime) + '\n';
-}
-
-setTimeout(printTime, 0);
-            </code></pre>
-            <a class="fragment no-burn" data-fragment-index="1" style="display: inline-block; margin-right: 10%; margin-top: 2%"
-               onclick="return runCode('timeout')" href="#">Ausführen</a>
-            <div class="fragment no-burn" data-fragment-index="1" style="display: inline-block; width: 40%; vertical-align: top">
-                <pre><code style="min-height: 1em" data-trim id="timeout-out"></code></pre>
-            </div>
-        </section>
-        <section>
-            <h2>Schneller als <code>setTimeout</code></h2>
-            <pre class="fragment no-burn" data-fragment-index="1"><code class="hljs js" id="post-message" data-trim contenteditable>
-const startTime = performance.now();
-const printTime = () => {
-    window.removeEventListener('message', printTime, true)
-    document.getElementById('post-out').textContent +=
-        (performance.now() - startTime) + '\n';
-}
-
-window.addEventListener('message', printTime, true);
-window.postMessage('mymessage', '*');
-            </code></pre>
-            <a class="fragment no-burn" data-fragment-index="1" style="display: inline-block; margin-right: 10%; margin-top: 2%"
-               onclick="return runCode('post-message')" href="#">Ausführen</a>
-            <div class="fragment no-burn" data-fragment-index="1" style="display: inline-block; width: 40%; vertical-align: top">
-                <pre><code style="min-height: 1em" data-trim id="post-out"></code></pre>
-            </div>
-        </section>
-        <section>
-            <h2>Gute Polyfills</h2>
-            <ul>
-                <li class="fragment no-burn"><a href="https://github.com/yuzujs/setImmediate">setimmediate</a></li>
-                <li class="fragment no-burn"><a href="https://github.com/taylorhakes/setAsap">setasap</a></li>
-            </ul>
-        </section>
-        <section>
-            <p>aber</p>
-            <p class="fragment no-burn" data-fragment-index="1">geht es</p>
-            <h2 class="fragment no-burn" data-fragment-index="2">NOCH schneller?</h2>
-            <img class="fragment no-burn" data-fragment-index="2" src="img/twins.gif">
-        </section>
-    </section>
-
-    <section data-title="Web Worker">
-        <section>
-            <h1>
-                Web Worker
-            </h1>
-            <h3>
-                Wenn es mal wieder länger dauert
-            </h3>
-        </section>
-        <section>
-            <h2>Web Worker</h2>
-            <ul>
-                <li>arbeiten echt parallel in einem eigenen Thread!</li>
-                <li>in allen modernen Browsern verfügbar</li>
-                <li>Worker können eigene Netzwerk-Requests absetzen</li>
-            </ul>
-            <p class="fragment no-burn">aber</p>
-            <ul>
-                <li>striktes Sandboxing gegenüber anderen Threads</li>
-                <li>Kommunikation nur über <code>postMessage(…)</code></li>
-                <li>Nur Austausch von reinen Datenobjekten</li>
-                <li>Kein Zugriff auf DOM oder <code>window</code></li>
-            </ul>
-            <ul>
-            </ul>
-        </section>
-        <section>
-            <h2>Einfaches Beispiel</h2>
-            <pre><code class="hljs js" id="worker" data-trim contenteditable>
-const worker = new Worker('workerFile.js');
-worker.addEventListener('message',
-    message => console.log(message.data));
-
-worker.postMessage('Hallo Worker!');
-            </code></pre>
-            <p class="fragment no-burn" data-fragment-index="1"><code>workerFile.js</code></p>
-            <pre class="fragment no-burn" data-fragment-index="1"><code class="hljs js" data-trim>
-self.addEventListener('message', message => {
-  console.log('Received: ' + message.data);
-  for (let i = 0; i < 1000000000; i++) {
-    if (i % 100000000 === 0) self.postMessage(i);
-  }
-});
-            </code></pre>
-            <a class="fragment no-burn" data-fragment-index="1" onclick="return runCode('worker')" href="#">Ausführen</a>
-        </section>
-        <section>
-            <p>In Webpack automatisiert</p>
-            <a href="https://github.com/webpack/worker-loader"><code>worker-loader</code></a>
-            <p>das Erstellen der externen Datei.</p>
-            <p class="fragment no-burn" data-fragment-index="1">Elegante Lösung ohne externe Datei mittels Data-Links:</p>
-            <h2><a class="fragment no-burn" data-fragment-index="1" href="https://github.com/parallel-js/parallel.js">Parallel.js</a></h2>
-        </section>
-        <section>
-            <p>Was ist, wenn der Code einfach</p>
-            <h2 class="fragment no-burn" data-fragment-index="1">zu langsam</h2>
-            <p class="fragment no-burn" data-fragment-index="1">ist?</p>
-            <img class="fragment no-burn" data-fragment-index="1" src="img/speed.gif">
-        </section>
-    </section>
-
-    <section data-title="Codeoptimierung">
-        <section>
-            <h1>Codeoptimierung</h1>
-            <p>Letzte Hilfe bei Performanceproblemen</p>
-        </section>
-        <section>
-            <h2><code>delete</code></h2>
-            <p>bei großen Datenstrukturen</p>
-            <div class="fragment no-burn" data-fragment-index="1" style="width: 80%; display:inline-block"><pre><code class="hljs js"
-                                                                                                                      id="delete-prepare"
-                                                                                                                      data-trim
-                                                                                                                      contenteditable>
-let myObject = {};
-for (let i = 0; i < 100000; i++) myObject[i] = 'content';
-            </code></pre>
-            </div>
-            <div class="fragment no-burn" data-fragment-index="1" style="width: 60%; display:inline-block"><pre><code class="hljs js"
-                                                                                                                      id="delete"
-                                                                                                                      data-trim
-                                                                                                                      contenteditable>
-for (let i = 0; i < 10000; i++)
-    delete myObject[i];
-            </code></pre>
-                <a class="fragment no-burn" data-fragment-index="1" style="display: block"
-                   onclick="return measure('delete-prepare', 'delete', 'delete-out')"
-                   href="#">Messen</a>
-            </div>
-            <div class="fragment no-burn" data-fragment-index="1" style="width: 30%; display:inline-block; vertical-align: top">
-                <pre><code data-trim id="delete-out" style="max-height: 15em; min-height: 1em"></code></pre>
-            </div>
-            <div class="fragment no-burn" data-fragment-index="2" style="width: 60%; display:inline-block"><pre><code class="hljs js"
-                                                                                                                      id="null-it"
-                                                                                                                      data-trim
-                                                                                                                      contenteditable>
-for (let i = 0; i < 10000; i++)
-    myObject[i] = null;
-            </code></pre>
-                <a class="fragment no-burn" data-fragment-index="2" style="display: block"
-                   onclick="return measure('delete-prepare', 'null-it', 'null-out')"
-                   href="#">Messen</a>
-            </div>
-            <div class="fragment no-burn" data-fragment-index="2" style="width: 30%; display:inline-block; vertical-align: top">
-                <pre><code data-trim id="null-out" style="max-height: 15em; min-height: 1em"></code></pre>
-            </div>
-        </section>
-        <section>
-            <h2><code>array.push</code></h2>
-            <p>bei großer bekannter Endgröße</p>
-            <div class="fragment no-burn" data-fragment-index="1" style="width: 40%; display:inline-block"><pre><code class="hljs js"
-                                                                                                                      id="push-prepare"
-                                                                                                                      data-trim
-                                                                                                                      contenteditable>
-let array = [];
-            </code></pre>
-            </div>
-            <div class="fragment no-burn" data-fragment-index="1" style="width: 60%; display:inline-block"><pre><code class="hljs js"
-                                                                                                                      id="push"
-                                                                                                                      data-trim
-                                                                                                                      contenteditable>
-for (let i = 0; i < 1000000; i++)
-    array.push(i);
-            </code></pre>
-                <a class="fragment no-burn" data-fragment-index="1" style="display: block"
-                   onclick="return measure('push-prepare', 'push', 'push-out')"
-                   href="#">Messen</a>
-            </div>
-            <div class="fragment no-burn" data-fragment-index="1" style="width: 30%; display:inline-block; vertical-align: top">
-                <pre><code data-trim id="push-out" style="max-height: 15em; min-height: 1em"></code></pre>
-            </div>
-            <div class="fragment no-burn" data-fragment-index="2" style="width: 60%; display:inline-block"><pre><code class="hljs js"
-                                                                                                                      id="assign"
-                                                                                                                      data-trim
-                                                                                                                      contenteditable>
-array.length = 1000000
-for (let i = 0; i < 1000000; i++)
-    array[i] = i;
-           </code></pre>
-                <a class="fragment no-burn" data-fragment-index="2" style="display: block"
-                   onclick="return measure('push-prepare', 'assign', 'assign-out')"
-                   href="#">Messen</a>
-            </div>
-            <div class="fragment no-burn" data-fragment-index="2" style="width: 30%; display:inline-block; vertical-align: top">
-                <pre><code data-trim id="assign-out" style="max-height: 15em; min-height: 1em"></code></pre>
-            </div>
-        </section>
-        <section>
-            <h2><code>array.indexOf</code></h2>
-            <div class="fragment no-burn" data-fragment-index="1" style="width: 80%; display:inline-block"><pre><code class="hljs js"
-                                                                                                                      id="array-search-prepare"
-                                                                                                                      data-trim
-                                                                                                                      contenteditable>
-let myArray = []; let x;
-for (let i = 0; i < 10000; i++) myArray[i] = 'Hello' + i;
-            </code></pre>
-            </div>
-            <div class="fragment no-burn" data-fragment-index="1" style="width: 60%; display:inline-block"><pre><code class="hljs js"
-                                                                                                                      id="array-search"
-                                                                                                                      data-trim
-                                                                                                                      contenteditable>
-for (let i = 0; i < 10000; i++)
-    x = myArray.indexOf('Hello' + i);
-            </code></pre>
-                <a class="fragment no-burn" data-fragment-index="1" style="display: block"
-                   onclick="return measure('array-search-prepare', 'array-search', 'array-search-out')"
-                   href="#">Messen</a>
-            </div>
-            <div class="fragment no-burn" data-fragment-index="1" style="width: 30%; display:inline-block; vertical-align: top">
-                <pre><code data-trim id="array-search-out" style="max-height: 15em; min-height: 1em"></code></pre>
-            </div>
-            <div class="fragment no-burn" data-fragment-index="2" style="width: 60%; display:inline-block"><pre><code class="hljs js"
-                                                                                                                      id="array-inverse"
-                                                                                                                      data-trim
-                                                                                                                      contenteditable>
-let indexMap = {};
-for (let i = 0; i < 10000; i++)
-    indexMap[myArray[i]] = i;
-for (let i = 0; i < 10000; i++)
-    x = indexMap['Hello' + i];
-            </code></pre>
-                <a class="fragment no-burn" data-fragment-index="2" style="display: block"
-                   onclick="return measure('array-search-prepare', 'array-inverse', 'array-inverse-out')"
-                   href="#">Messen</a>
-            </div>
-            <div class="fragment no-burn" data-fragment-index="2" style="width: 30%; display:inline-block; vertical-align: top">
-                <pre><code data-trim id="array-inverse-out" style="max-height: 15em; min-height: 1em"></code></pre>
-            </div>
-        </section>
-        <section>
-            <h2><code>let</code> vs. <code>var</code></h2>
-            <div class="fragment no-burn" data-fragment-index="1" style="width: 60%; display:inline-block"><pre><code class="hljs js"
-                                                                                                                      id="var-content"
-                                                                                                                      data-trim
-                                                                                                                      contenteditable>
-var x, y = 'content';
-for (var i = 0; i < 10000; i++) x = y;
-            </code></pre>
-                <a class="fragment no-burn" data-fragment-index="1" style="display: block"
-                   onclick="return measure('var-content', 'var-content', 'var-out')"
-                   href="#">Messen</a>
-            </div>
-            <div class="fragment no-burn" data-fragment-index="1" style="width: 30%; display:inline-block; vertical-align: top">
-                <pre><code data-trim id="var-out" style="max-height: 15em; min-height: 1em"></code></pre>
-            </div>
-            <div class="fragment no-burn" data-fragment-index="2" style="width: 60%; display:inline-block"><pre><code class="hljs js"
-                                                                                                                      id="let"
-                                                                                                                      data-trim
-                                                                                                                      contenteditable>
-let x, y = 'content';
-for (let i = 0; i < 10000; i++) x = y;
-            </code></pre>
-                <a class="fragment no-burn" data-fragment-index="2" style="display: block" onclick="return measure('', 'let', 'let-out')"
-                   href="#">Messen</a>
-            </div>
-            <div class="fragment no-burn" data-fragment-index="2" style="width: 30%; display:inline-block; vertical-align: top">
-                <pre><code data-trim id="let-out" style="max-height: 15em; min-height: 1em"></code></pre>
-            </div>
-        </section>
-        <section>
-            <h2>Argumentobjekte</h2>
-            <div class="fragment no-burn" data-fragment-index="1" style="width: 60%; display:inline-block">
-                <pre><code class="hljs js" id="object-args" data-trim contenteditable>
-const myFunc = ({one, two, three}) => {}
-for (let i = 0; i < 10000; i++)
-    myFunc({one: 1, two: 2, three: 3});
-                </code></pre>
-                <a class="fragment no-burn" data-fragment-index="1" style="display: block"
-                   onclick="return measure('', 'object-args', 'object-args-out')"
-                   href="#">Messen</a>
-            </div>
-            <div class="fragment no-burn" data-fragment-index="1" style="width: 30%; display:inline-block; vertical-align: top">
-                <pre><code data-trim id="object-args-out" style="max-height: 15em; min-height: 1em"></code></pre>
-            </div>
-            <div class="fragment no-burn" data-fragment-index="2" style="width: 60%; display:inline-block">
-                <pre><code class="hljs js" id="old-args" data-trim contenteditable>
-const myFunc = (one, two, three) => {}
-for (let i = 0; i < 10000; i++)
-    myFunc(1, 2, 3);
-                </code></pre>
-                <a class="fragment no-burn" data-fragment-index="2" style="display: block"
-                   onclick="return measure('', 'old-args', 'old-args-out')"
-                   href="#">Messen</a>
-            </div>
-            <div class="fragment no-burn" data-fragment-index="2" style="width: 30%; display:inline-block; vertical-align: top">
-                <pre><code data-trim id="old-args-out" style="max-height: 15em; min-height: 1em"></code></pre>
-            </div>
-        </section>
-        <section>
-            <p>bedenke</p>
-            <h2 class="fragment no-burn">clean > fast</h2>
-            <p class="fragment no-burn">und</p>
-            <h2 class="fragment no-burn">messen, nicht glauben!</h2>
         </section>
     </section>
 
@@ -591,7 +87,7 @@ for (let i = 0; i < 10000; i++)
     <section>
         <section>
             <h1>Vielen Dank!</h1>
-            <p class="fragment no-burn" data-fragment-index="1">Interaktive Slides:</p>
+            <p class="fragment no-burn" data-fragment-index="1">Interaktive Slides: (AUCH QR-CODE)</p>
             <h3 class="fragment no-burn" data-fragment-index="1"><a href="https://homedir.tngtech.com/~taegertl/js-performance">homedir.tngtech.com/~taegertl/<br>js-performance</a>
             </h3>
 
