@@ -1,3 +1,16 @@
+// === Reconfigure PIXI to enable hooking into autoDetectRenderer
+(function() {
+  var newPixi = {};
+  var propertyDescriptors = Object.getOwnPropertyDescriptors(PIXI);
+  Object.keys(propertyDescriptors)
+    .filter(function(prop) {return prop !== 'autoDetectRenderer';})
+    .forEach(function(prop) {
+      Object.defineProperty(newPixi, prop, propertyDescriptors[prop]);
+    });
+  newPixi.autoDetectRenderer = PIXI.autoDetectRenderer;
+  window.PIXI = newPixi;
+}());
+
 // === Add listeners that fire when a slide identified by data-slidename="<slideName>" enters or leaves view
 var addSlideListener = (function() {
   var listenedSlides = [];
@@ -40,6 +53,7 @@ var addSlideListener = (function() {
 // === Special listener for slides containing Pixi canvas elements with resize detection
 function initPixiSlide(slideName, onGetRunCodeHook, onEnterSlide, onTeardown, onResize) {
   var renderer;
+  var lastRenderTarget = null;
   var origRequestAnimationFrame;
   var isActive = false;
   var hasBecomeInactive = false;
@@ -82,15 +96,25 @@ function initPixiSlide(slideName, onGetRunCodeHook, onEnterSlide, onTeardown, on
     isActive = false;
     requestReactivate = false;
     window.requestAnimationFrame(function() {});
+    recreateCanvas();
   }
 
   function recreateCanvas() {
+    if (renderer) {
+      // To work around a bug when Graphics objects are only rendererd once
+      if (lastRenderTarget) {
+        renderer.render(lastRenderTarget);
+      }
+      renderer.destroy();
+      renderer = null;
+      lastRenderTarget = null;
+    }
     var oldCanvas = document.getElementById('canvas-' + slideName);
     var canvasParent = oldCanvas.parentNode;
     var newCanvas = document.createElement('canvas');
     newCanvas.id = oldCanvas.id;
-    newCanvas.style.width ='100%';
-    newCanvas.style.height ='100%';
+    newCanvas.style.width = '100%';
+    newCanvas.style.height = '100%';
     canvasParent.removeChild(oldCanvas);
     canvasParent.appendChild(newCanvas);
   }
@@ -100,6 +124,11 @@ function initPixiSlide(slideName, onGetRunCodeHook, onEnterSlide, onTeardown, on
     var origAutoDetectRenderer = PIXI.autoDetectRenderer;
     PIXI.autoDetectRenderer = function() {
       renderer = origAutoDetectRenderer.apply(this, arguments);
+      var origRender = renderer.render;
+      renderer.render = function() {
+        lastRenderTarget = arguments[0];
+        origRender.apply(this, arguments);
+      };
       return renderer;
     };
 
@@ -194,7 +223,7 @@ initEditSlide('structure');
 
     function createTextAboveLogo(tngLogo) {
       var text = new PIXI.Text(
-        'Lukas Taegert', {font: '24px Arial', fill: 0x101010, align: 'center'}
+        'Lukas Taegert', {fontFamily: 'Arial', fontSize: 24, fill: 0x101010, align: 'center'}
       );
       text.anchor.set(0.5, 1);
       text.position.set(0, -tngLogo.height - 28);
@@ -241,7 +270,7 @@ initEditSlide('structure');
     }
 
     function createSubtitle() {
-      var title = new PIXI.Text('denn Dein Canvas will mehr…', {font: '48px Arial', fill: 0x101010, align: 'center'});
+      var title = new PIXI.Text('denn Dein Canvas will mehr…', {fontFamily: 'Arial', fontSize: 48, fill: 0x101010, align: 'center'});
       title.anchor.set(0.5, 0);
       title.resolution = 2;
       title.position.y = 80;
