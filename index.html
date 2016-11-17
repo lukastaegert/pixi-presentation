@@ -35,13 +35,13 @@
         <canvas id="canvas-intro" style="width:100%;height:100%;"></canvas>
     </section>
 
-    <section data-title="Aufbau eines Projektes">
+    <section data-title="Erste Schritte">
         <section>
-            <h1>Aufbau</h1>
-            <h3>eines Pixi Projektes</h3>
+            <h3>Erste</h3>
+            <h1>Schritte</h1>
         </section>
         <section>
-            <h2>Schritte</h2>
+            <h2>Aufbau</h2>
             <ul>
                 <li>Renderer verwaltet ein <code style="color:#0000FF;">&lt;canvas&gt;</code> Element</li>
                 <li>Szene = <code style="color:#0000FF;">PIXI.Container</code> - Objekt</li>
@@ -69,39 +69,126 @@ renderer.render(stage);
                 </div>
             </div>
         </section>
-        <section data-slidename="animation">
+        <section>
+            <h2>PIXI-Objekte</h2>
+
+            <ul class="no-burn">
+                <li><code style="color:#0000FF;">Container</code>: Enthält andere Objekte</li>
+                <li><code style="color:#0000FF;">Graphics</code>: Vektorgrafiken</li>
+                <li><code style="color:#0000FF;">Sprite</code>: Bild mit Textur</li>
+                <li><code style="color:#0000FF;">Text</code>: Textobjekt, intern als Sprite gerendert</li>
+            </ul>
+        </section>
+    </section>
+
+    <section data-title="Der Scene-Graph">
+        <section>
+            <h3>Der</h3>
+            <h1>Scene-Graph</h1>
+        </section>
+        <section>
+            <h2>Objektkomposition</h2>
+            <ul>
+                <li>Alle Objekte sind auch Container</li>
+                <li>Objekte haben eine <code style="color:#0000FF;">.position</code></li>
+                <li>Diese beschreibt die Position im Elternelement</li>
+                <li>Transformationen beeinflussen alle Kinder</li>
+            </ul>
+        </section>
+        <section data-slidename="structure">
             <div style="display:flex;width:1024px;height:768px;">
                 <div style="width:500px;">
-                    <canvas style="width: 100%;height:100%;background-color:black;" id="canvas-animation"></canvas>
+                    <canvas style="width: 100%;height:100%;" id="canvas-coordinates"></canvas>
                 </div>
                 <div style="width:524px;">
-                    <!--<pre><code class="hljs js" id="animation" data-trim contenteditable style="width:100%;">var renderer =-->
-                    <!--PIXI.autoDetectRenderer(-->
-                    <!--512, 768, {-->
-                    <!--view: document.getElementById(-->
-                    <!--'canvas-animation')-->
-                    <!--});-->
+<pre><code class="hljs js" id="coordinates" data-trim contenteditable style="width:100%;">var renderer = PIXI.autoDetectRenderer(
+  500, 768, {
+    view: document.getElementById(
+          'canvas-coordinates')
+  });
 
-                    <!--var stage = new PIXI.Container();-->
+var stage = new PIXI.Container();
 
-                    <!--var rect = new PIXI.Graphics()-->
-                    <!--.beginFill(0xff0000)-->
-                    <!--.drawRect(-100, -50, 200, 100)-->
-                    <!--.endFill();-->
-                    <!--stage.addChild(rect);-->
+renderer.render(stage);
+    DO THIS EXAMPLE
+</code></pre>
+                    <a onclick="return runCode('coordinates')" href="#">Ausführen</a>
+                </div>
+            </div>
+        </section>
+    </section>
 
-                    <!--rect.position.set(256, 384);-->
+    <section data-title="Animationen">
+        <section>
+            <h1>Animationen</h1>
+        </section>
+        <section>
+            <h2>Eine Szene animieren</h2>
+            <ul>
+                <li>Szene verändern</li>
+                <li>Rendern</li>
+                <li>Neuen Animation-Frame anfordern</li>
+                <li>Beginne von vorne</li>
+            </ul>
+            <p class="fragment">
+                Pixi gibt kein Framework für Animationen vor!
+            </p>
+        </section>
+        <section data-slidename="structure">
+            <div style="display:flex;width:1024px;height:768px;">
+                <div style="width:500px;">
+                    <canvas style="width: 100%;height:100%;" id="canvas-animations"></canvas>
+                </div>
+                <div style="width:524px;">
+<pre><code class="hljs js" id="animations" data-trim contenteditable style="width:100%;">var renderer = PIXI.autoDetectRenderer(
+  500, 768, {
+    view: document.getElementById(
+          'canvas-animations')
+  });
 
-                    <!--function performAnimationLoop() {-->
-                    <!--rect.rotation += 0.01;-->
-                    <!--renderer.render(stage);-->
-                    <!--window.requestAnimationFrame(-->
-                    <!--performAnimationLoop);-->
-                    <!--}-->
+var stage = new PIXI.Container();
 
-                    <!--performAnimationLoop();-->
-                    <!--</code></pre>-->
-                    <!--<a onclick="return runCode('animation')" href="#">Ausführen</a>-->
+renderer.render(stage);
+    DO THIS EXAMPLE
+</code></pre>
+                    <a onclick="return runCode('animations')" href="#">Ausführen</a>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <section data-title="Externe Ressourcen">
+        <section>
+            <h3>Externe</h3>
+            <h1>Ressourcen</h1>
+        </section>
+        <section>
+            <h2>Externe Ressourcen einbinden</h2>
+            <ul>
+                <li>Asynchron geladen mittels <code style="color:#0000FF;">PIXI.loaders.Loader</code></li>
+                <li>Für Bilder und Spritesheets</li>
+                <li>Einzelbilder automatisch in <code style="color:#0000FF;">PIXI.utils.TextureCache</code></li>
+                <li>Neue Sprites mit <code style="color:#0000FF;">PIXI.Sprite.fromFrame</code></li>
+            </ul>
+        </section>
+        <section data-slidename="structure">
+            <div style="display:flex;width:1024px;height:768px;">
+                <div style="width:500px;">
+                    <canvas style="width: 100%;height:100%;" id="canvas-resources"></canvas>
+                </div>
+                <div style="width:524px;">
+<pre><code class="hljs js" id="resources" data-trim contenteditable style="width:100%;">var renderer = PIXI.autoDetectRenderer(
+  500, 768, {
+    view: document.getElementById(
+          'canvas-resources')
+  });
+
+var stage = new PIXI.Container();
+
+renderer.render(stage);
+    DO THIS EXAMPLE
+</code></pre>
+                    <a onclick="return runCode('resources')" href="#">Ausführen</a>
                 </div>
             </div>
         </section>

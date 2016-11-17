@@ -11,6 +11,38 @@
   window.PIXI = newPixi;
 }());
 
+// === Enable stopping running animation loops
+var animFrameActive = true;
+var requestRunAfterAnimFrameReset = null;
+
+(function() {
+  var origRequestAnimationFrame = window.requestAnimationFrame;
+  var animFrameHasBecomeInactive = false;
+
+  window.requestAnimationFrame = function() {
+    if (animFrameActive) {
+      origRequestAnimationFrame.apply(this, arguments);
+    } else {
+      if (!animFrameHasBecomeInactive) {
+        animFrameHasBecomeInactive = true;
+        origRequestAnimationFrame(function() {
+          animFrameHasBecomeInactive = false;
+          animFrameActive = true;
+          if (requestRunAfterAnimFrameReset) {
+            requestRunAfterAnimFrameReset();
+            requestRunAfterAnimFrameReset = null;
+          }
+        });
+      }
+    }
+  };
+}());
+
+function restartAnimationFrames() {
+  animFrameActive = false;
+  window.requestAnimationFrame(function() {});
+}
+
 // === Add listeners that fire when a slide identified by data-slidename="<slideName>" enters or leaves view
 var addSlideListener = (function() {
   var listenedSlides = [];
@@ -50,14 +82,10 @@ var addSlideListener = (function() {
   }
 }());
 
-// === Special listener for slides containing Pixi canvas elements with resize detection
-function initPixiSlide(slideName, onGetRunCodeHook, onEnterSlide, onTeardown, onResize) {
+// === Special listener for slides containing Pixi canvas elements
+function initPixiSlide(slideName, onGetRunCodeHook, onEnterSlide, onResize) {
   var renderer;
   var lastRenderTarget = null;
-  var origRequestAnimationFrame;
-  var isActive = false;
-  var hasBecomeInactive = false;
-  var requestReactivate = false;
 
   function requestUpdateCanvasSize() {
     window.requestAnimationFrame(function() {
@@ -67,35 +95,11 @@ function initPixiSlide(slideName, onGetRunCodeHook, onEnterSlide, onTeardown, on
   }
 
   function onEnter() {
-    origRequestAnimationFrame = window.requestAnimationFrame;
-    isActive = true;
-    window.requestAnimationFrame = function() {
-      if (isActive) {
-        origRequestAnimationFrame.apply(this, arguments);
-      } else {
-        if (!hasBecomeInactive) {
-          hasBecomeInactive = true;
-          origRequestAnimationFrame(function() {
-            hasBecomeInactive = false;
-            if (requestReactivate) {
-              isActive = true;
-              requestReactivate();
-              requestReactivate = false;
-            } else {
-              window.requestAnimationFrame = origRequestAnimationFrame;
-            }
-          });
-        }
-      }
-    };
     onEnterSlide && onEnterSlide();
   }
 
   function onLeave() {
-    onTeardown && onTeardown();
-    isActive = false;
-    requestReactivate = false;
-    window.requestAnimationFrame(function() {});
+    restartAnimationFrames();
     recreateCanvas();
   }
 
@@ -139,11 +143,10 @@ function initPixiSlide(slideName, onGetRunCodeHook, onEnterSlide, onTeardown, on
   }
 
   function requestRunCode(onRunCode) {
-    isActive = false;
-    requestReactivate = function() {
+    requestRunAfterAnimFrameReset = function() {
       runCode(onRunCode)
     };
-    window.requestAnimationFrame(function() {});
+    restartAnimationFrames();
   }
 
   onGetRunCodeHook(requestRunCode);
@@ -314,14 +317,11 @@ initEditSlide('structure');
     runCode && runCode(onRunCode);
   }
 
-  function onTeardown() {
-  }
-
   function onResize() {
     logoContainer.position.set(canvas.clientWidth / 2, canvas.clientHeight / 2);
     backgroundContainer.position.set(canvas.clientWidth / 2, canvas.clientHeight);
   }
 
-  initPixiSlide(SLIDE_NAME, onGetRunCodeHook, onEnter, onTeardown, onResize);
+  initPixiSlide(SLIDE_NAME, onGetRunCodeHook, onEnter, onResize);
 }());
 
