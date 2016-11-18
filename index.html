@@ -72,11 +72,11 @@ renderer.render(stage);
         <section>
             <h2>PIXI-Objekte</h2>
 
-            <ul class="no-burn">
-                <li><code style="color:#0000FF;">Container</code>: Enthält andere Objekte</li>
-                <li><code style="color:#0000FF;">Graphics</code>: Vektorgrafiken</li>
-                <li><code style="color:#0000FF;">Sprite</code>: Bild mit Textur</li>
-                <li><code style="color:#0000FF;">Text</code>: Textobjekt, intern als Sprite gerendert</li>
+            <ul>
+                <li data-fragment-index="1" class="no-burn"><code style="color:#0000FF;">Container</code>: Enthält andere Objekte</li>
+                <li data-fragment-index="1" class="no-burn"><code style="color:#0000FF;">Graphics</code>: Vektorgrafiken</li>
+                <li data-fragment-index="1" class="no-burn"><code style="color:#0000FF;">Sprite</code>: Bild mit Textur</li>
+                <li data-fragment-index="1" class="no-burn"><code style="color:#0000FF;">Text</code>: Textobjekt, intern als Sprite gerendert</li>
             </ul>
         </section>
     </section>
@@ -92,10 +92,10 @@ renderer.render(stage);
                 <li>Alle Objekte sind auch Container</li>
                 <li>Objekte haben eine <code style="color:#0000FF;">.position</code></li>
                 <li>Diese beschreibt die Position im Elternelement</li>
-                <li>Transformationen beeinflussen alle Kinder</li>
+                <li>Transformationen (<code>.scale</code>, <code>.rotation</code>)beeinflussen alle Kinder</li>
             </ul>
         </section>
-        <section data-slidename="structure">
+        <section data-slidename="coordinates">
             <div style="display:flex;width:1024px;height:768px;">
                 <div style="width:500px;">
                     <canvas style="width: 100%;height:100%;" id="canvas-coordinates"></canvas>
@@ -109,8 +109,16 @@ renderer.render(stage);
 
 var stage = new PIXI.Container();
 
+var circle = new PIXI.Graphics()
+  .beginFill(0x00ff00)
+  .drawCircle(0, 0, 100)
+  .endFill();
+
+var text = new PIXI.Text('Hallo');
+circle.addChild(text);
+stage.addChild(circle);
+
 renderer.render(stage);
-    DO THIS EXAMPLE
 </code></pre>
                     <a onclick="return runCode('coordinates')" href="#">Ausführen</a>
                 </div>
@@ -134,7 +142,7 @@ renderer.render(stage);
                 Pixi gibt kein Framework für Animationen vor!
             </p>
         </section>
-        <section data-slidename="structure">
+        <section data-slidename="animations">
             <div style="display:flex;width:1024px;height:768px;">
                 <div style="width:500px;">
                     <canvas style="width: 100%;height:100%;" id="canvas-animations"></canvas>
@@ -148,8 +156,25 @@ renderer.render(stage);
 
 var stage = new PIXI.Container();
 
-renderer.render(stage);
-    DO THIS EXAMPLE
+var rect = new PIXI.Graphics()
+  .beginFill(0x0000ff)
+  .drawRect(0, 0, 200, 100)
+  .endFill();
+rect.position.set(200, 300)
+stage.addChild(rect);
+
+function updateStage() {
+  rect.rotation += 0.01;
+}
+
+function performAnimationLoop() {
+  updateStage();
+  renderer.render(stage);
+  window.requestAnimationFrame(
+    performAnimationLoop);
+}
+
+performAnimationLoop();
 </code></pre>
                     <a onclick="return runCode('animations')" href="#">Ausführen</a>
                 </div>
@@ -171,7 +196,7 @@ renderer.render(stage);
                 <li>Neue Sprites mit <code style="color:#0000FF;">PIXI.Sprite.fromFrame</code></li>
             </ul>
         </section>
-        <section data-slidename="structure">
+        <section data-slidename="resources">
             <div style="display:flex;width:1024px;height:768px;">
                 <div style="width:500px;">
                     <canvas style="width: 100%;height:100%;" id="canvas-resources"></canvas>
@@ -183,12 +208,57 @@ renderer.render(stage);
           'canvas-resources')
   });
 
+var loader = new PIXI.loaders.Loader()
+  .add('img/tng.png')
+  .add('img/cats.json')
+  .on('complete', setupStage)
+  .load();
+
+function setupStage() {
+  var stage = new PIXI.Container();
+  var sprite = PIXI.Sprite
+    .fromFrame('img/tng.png');
+  stage.addChild(sprite);
+  renderer.render(stage);
+}
+</code></pre>
+                    <a onclick="return runCode('resources')" href="#">Ausführen</a>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <section data-title="Interaktion">
+        <section>
+            <h1>Interaktion</h1>
+        </section>
+        <section>
+            <h2>Den Interaktionsmanager nutzen</h2>
+            <ul>
+                <li>Objekte müssen <code style="color:#0000FF;">.interactive=true</code> sein</li>
+                <li><code>node</code>-style Events (<code>.on</code>, <code>.once</code>...)</li>
+                <li>Eventnamen wie im Browser (<code>mousemove</code>, <code>click</code>...)</li>
+                <li>Auch Touch-Events werden unterstützt!</li>
+            </ul>
+        </section>
+        <section data-slidename="interactions">
+            <div style="display:flex;width:1024px;height:768px;">
+                <div style="width:500px;">
+                    <canvas style="width: 100%;height:100%;" id="canvas-interactions"></canvas>
+                </div>
+                <div style="width:524px;">
+<pre><code class="hljs js" id="interactions" data-trim contenteditable style="width:100%;">var renderer = PIXI.autoDetectRenderer(
+  500, 768, {
+    view: document.getElementById(
+          'canvas-interactions')
+  });
+
 var stage = new PIXI.Container();
 
 renderer.render(stage);
     DO THIS EXAMPLE
 </code></pre>
-                    <a onclick="return runCode('resources')" href="#">Ausführen</a>
+                    <a onclick="return runCode('interactions')" href="#">Ausführen</a>
                 </div>
             </div>
         </section>
@@ -197,14 +267,11 @@ renderer.render(stage);
     <!-- Danke Slide -->
     <section>
         <section>
-            <h1>Vielen Dank!</h1>
-            <p class="fragment no-burn" data-fragment-index="1">Interaktive Slides: (AUCH QR-CODE)</p>
-            <h3 class="fragment no-burn" data-fragment-index="1"><a href="https://homedir.tngtech.com/~taegertl/js-performance">homedir.tngtech.com/~taegertl/<br>js-performance</a>
-            </h3>
-
-            <p>
-                <a href="mailto:lukas@tngtech.com">lukas.taegert@tngtech.com</a><br>
-            </p>
+            <p>Interaktive Slides</p>
+            <a href="https://lukastaegert.github.io/pixi-presentation">
+                <img src="img/qrcode.svg" style="width:40%;">
+                <p>lukastaegert.github.io/pixi-presentation</p>
+            </a>
             <a href="http://www.tngtech.com"><img class="logo" src="img/tng.svg"></a>
         </section>
         <section data-markdown>

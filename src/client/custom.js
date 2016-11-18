@@ -95,6 +95,7 @@ function initPixiSlide(slideName, onGetRunCodeHook, onEnterSlide, onResize) {
   }
 
   function onEnter() {
+    onGetRunCodeHook(requestRunCode);
     onEnterSlide && onEnterSlide();
   }
 
@@ -149,7 +150,6 @@ function initPixiSlide(slideName, onGetRunCodeHook, onEnterSlide, onResize) {
     restartAnimationFrames();
   }
 
-  onGetRunCodeHook(requestRunCode);
   addSlideListener(slideName, onEnter, onLeave);
 }
 
@@ -167,6 +167,10 @@ function initEditSlide(slideName) {
 }
 
 initEditSlide('structure');
+initEditSlide('coordinates');
+initEditSlide('animations');
+initEditSlide('resources');
+initEditSlide('interactions');
 
 // === Initial presentation
 (function() {
