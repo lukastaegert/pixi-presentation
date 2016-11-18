@@ -209,7 +209,7 @@ performAnimationLoop();
   });
 
 var loader = new PIXI.loaders.Loader()
-  .add('img/tng.png')
+  .add('img/pixi-logo.png')
   .add('img/cats.json')
   .on('complete', setupStage)
   .load();
@@ -217,7 +217,8 @@ var loader = new PIXI.loaders.Loader()
 function setupStage() {
   var stage = new PIXI.Container();
   var sprite = PIXI.Sprite
-    .fromFrame('img/tng.png');
+    .fromFrame('img/pixi-logo.png');
+
   stage.addChild(sprite);
   renderer.render(stage);
 }
@@ -225,6 +226,12 @@ function setupStage() {
                     <a onclick="return runCode('resources')" href="#">Ausführen</a>
                 </div>
             </div>
+        </section>
+        <section>
+            <h2>Spritesheets</h2>
+            <p class="fragment no-burn" data-fragment-index="1">Bestehen aus einem (.png, .jpg) Bild und einer JSON-Datei</p>
+            <p class="fragment no-burn" data-fragment-index="2">Am Einfachsten erzeugt mit</p>
+            <h3 class="fragment no-burn" data-fragment-index="2"><a href="http://www.codeandweb.com/texturepacker">www.codeandweb.com/texturepacker</a></h3>
         </section>
     </section>
 
@@ -252,11 +259,30 @@ function setupStage() {
     view: document.getElementById(
           'canvas-interactions')
   });
+var loader = new PIXI.loaders.Loader()
+  .add('img/cats.json')
+  .on('complete', setupStage).load();
 
-var stage = new PIXI.Container();
+function setupStage() {
+  var stage = new PIXI.Container();
+  var sprite = PIXI.Sprite.fromFrame('0');
+  stage.addChild(sprite);
+  renderer.render(stage);
+  sprite.interactive = true;
 
-renderer.render(stage);
-    DO THIS EXAMPLE
+  sprite.on('mouseover', () => {
+    var colorMatrix = new PIXI.filters
+      .ColorMatrixFilter();
+    colorMatrix.greyscale(0.5);
+    sprite.filters = [colorMatrix];
+    renderer.render(stage);
+  });
+
+  sprite.on('mouseout', () => {
+    sprite.filters = null;
+    renderer.render(stage);
+  });
+}
 </code></pre>
                     <a onclick="return runCode('interactions')" href="#">Ausführen</a>
                 </div>

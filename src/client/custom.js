@@ -266,14 +266,17 @@ initEditSlide('interactions');
         logoContainer.filters = null;
       });
 
-      logoContainer.on('click', function() {
+      function handleClick() {
         if (!isLogoRotating) {
           isLogoRotating = true;
           logoContainer.removeChild(title);
         } else {
           addCats(Math.min(Math.max(cats.length, 1), MAX_CATS - cats.length));
         }
-      });
+      }
+
+      logoContainer.on('click', handleClick);
+      logoContainer.on('touchend', handleClick);
     }
 
     function createSubtitle() {
