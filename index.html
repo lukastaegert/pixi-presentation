@@ -270,7 +270,7 @@ function setupStage() {
   renderer.render(stage);
   sprite.interactive = true;
 
-  sprite.on('mouseover', () => {
+  sprite.on('mouseover', function () {
     var colorMatrix = new PIXI.filters
       .ColorMatrixFilter();
     colorMatrix.greyscale(0.5);
@@ -278,7 +278,7 @@ function setupStage() {
     renderer.render(stage);
   });
 
-  sprite.on('mouseout', () => {
+  sprite.on('mouseout', function () {
     sprite.filters = null;
     renderer.render(stage);
   });
