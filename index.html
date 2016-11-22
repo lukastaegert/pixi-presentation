@@ -20,19 +20,36 @@
 </head>
 
 <body class="charred auto-fragment">
-    <!-- Titel-Slide -->
-    <section>
+    <section data-slidename="intro" style="width:1024px;height:768px" id="intro-container">
+        <div style="position:absolute;width:1024px;height:768px;">
+            <canvas id="canvas-intro" style="width:100%;height:100%"></canvas>
+        </div>
         <h3>Kick up your game mit</h3>
-        <h1>Pixi.js</h1>
-        <p style="padding-top:5%">
+        <p style="padding-top:300px">
             <a href="mailto:lukas.taegert@tngtech.com">Dr. Lukas Taegert</a>
         </p>
         <p>e-fellows.net IT Day, 2016-11-25</p>
         <a href="http://www.tngtech.com"><img class="logo" src="img/tng.svg"></a>
     </section>
 
-    <section data-slidename="intro" style="width:1024px;height:768px;" id="intro-container">
-        <canvas id="canvas-intro" style="width:100%;height:100%;"></canvas>
+    <section>
+        <h2>Herausforderungen</h2>
+        <ul>
+            <li>Immer komplexere UIs</li>
+            <li>Komplexe DOM-Animationen sind langsam</li>
+            <li>Ausweg: Canvas-Animationen (in > 97% aller Browser)</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Pixi.js</h2>
+        <ul>
+            <li>Einfaches Interface zur Gestaltung komplexer Canvas-Inhalte</li>
+            <li>Nutzt automatisch WebGL wenn verfügbar<br>(in ca. 90% aller Browser!)</li>
+            <li>Sonst extrem schneller Software-Renderer</li>
+            <li>Managt Maus- und Touchevents</li>
+            <li>Einfache Schnittstelle zum asynchronen Laden von Ressourcen</li>
+        </ul>
     </section>
 
     <section data-title="Erste Schritte">
@@ -76,7 +93,9 @@ renderer.render(stage);
                 <li data-fragment-index="1" class="no-burn"><code style="color:#0000FF;">Container</code>: Enthält andere Objekte</li>
                 <li data-fragment-index="1" class="no-burn"><code style="color:#0000FF;">Graphics</code>: Vektorgrafiken</li>
                 <li data-fragment-index="1" class="no-burn"><code style="color:#0000FF;">Sprite</code>: Bild mit Textur</li>
-                <li data-fragment-index="1" class="no-burn"><code style="color:#0000FF;">Text</code>: Textobjekt, intern als Sprite gerendert</li>
+                <li data-fragment-index="1" class="no-burn"><code style="color:#0000FF;">Text</code>: Textobjekt, intern als Sprite
+                    gerendert
+                </li>
             </ul>
         </section>
     </section>
@@ -92,7 +111,7 @@ renderer.render(stage);
                 <li>Alle Objekte sind auch Container</li>
                 <li>Objekte haben eine <code style="color:#0000FF;">.position</code></li>
                 <li>Diese beschreibt die Position im Elternelement</li>
-                <li>Transformationen (<code>.scale</code>, <code>.rotation</code>)beeinflussen alle Kinder</li>
+                <li>Transformationen (<code>.scale</code>, <code>.rotation</code>)<br>beeinflussen alle Kinder</li>
             </ul>
         </section>
         <section data-slidename="coordinates">
@@ -231,7 +250,8 @@ function setupStage() {
             <h2>Spritesheets</h2>
             <p class="fragment no-burn" data-fragment-index="1">Bestehen aus einem (.png, .jpg) Bild und einer JSON-Datei</p>
             <p class="fragment no-burn" data-fragment-index="2">Am Einfachsten erzeugt mit</p>
-            <h3 class="fragment no-burn" data-fragment-index="2"><a href="http://www.codeandweb.com/texturepacker">www.codeandweb.com/texturepacker</a></h3>
+            <h3 class="fragment no-burn" data-fragment-index="2"><a href="http://www.codeandweb.com/texturepacker">www.codeandweb.com/texturepacker</a>
+            </h3>
         </section>
     </section>
 
@@ -297,6 +317,7 @@ function setupStage() {
             <li>Aktuelles: <a href="http://www.goodboydigital.com/blog">www.goodboydigital.com/blog</a></li>
             <li>API Doku: <a href="https://pixijs.github.io/docs">pixijs.github.io/docs</a></li>
             <li>Spiele-Framework basierend auf Pixi: <a href="https://phaser.io/">phaser.io</a></li>
+            <li>Für ein modernes, funktionaleres Interface: <a href="https://github.com/Izzimach/react-pixi">React-Pixi</a></li>
         </ul>
     </section>
 

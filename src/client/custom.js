@@ -176,7 +176,7 @@ initEditSlide('interactions');
 (function() {
   var SLIDE_NAME = 'intro';
   var runCode;
-  var canvas, renderer, stage, backgroundContainer, logoContainer;
+  var canvas, renderer, stage, logoContainer;
   var cats;
   var isLogoRotating;
 
@@ -197,9 +197,6 @@ initEditSlide('interactions');
     });
 
     stage = new PIXI.Container();
-    backgroundContainer = new PIXI.Container();
-    stage.addChild(backgroundContainer);
-
     var catContainer = new PIXI.Container();
     stage.addChild(catContainer);
 
@@ -209,35 +206,9 @@ initEditSlide('interactions');
     var loader = new PIXI.loaders.Loader()
       .add('img/pixi-logo.png')
       .add('img/cats.json')
-      .add('img/tng.png')
-      .once('complete', setupBackground)
       .once('complete', setupPixiLogo)
       .once('complete', performAnimationLoop)
       .load();
-
-    function setupBackground() {
-      var tngLogo = createTNGLogo();
-      createTextAboveLogo(tngLogo);
-    }
-
-    function createTNGLogo() {
-      var tngLogo = PIXI.Sprite.fromFrame('img/tng.png');
-      tngLogo.scale.set(0.5, 0.5);
-      tngLogo.position.set(-tngLogo.width / 2, -tngLogo.height - 10);
-      backgroundContainer.addChild(tngLogo);
-      return tngLogo;
-    }
-
-    function createTextAboveLogo(tngLogo) {
-      var text = new PIXI.Text(
-        'Lukas Taegert', {fontFamily: 'Arial', fontSize: 24, fill: 0x101010, align: 'center'}
-      );
-      text.anchor.set(0.5, 1);
-      text.position.set(0, -tngLogo.height - 28);
-      // using double resolution provides better rendered text when it is not perfectly aligned
-      text.resolution = 2;
-      backgroundContainer.addChild(text);
-    }
 
     var currentCatSpriteIndex = 0;
 
@@ -253,7 +224,6 @@ initEditSlide('interactions');
 
     function setupPixiLogo() {
       createLogoSprite();
-      var title = createSubtitle();
 
       logoContainer.on('mouseover', function() {
         var colorMatrix = new PIXI.filters.ColorMatrixFilter();
@@ -269,7 +239,6 @@ initEditSlide('interactions');
       function handleClick() {
         if (!isLogoRotating) {
           isLogoRotating = true;
-          logoContainer.removeChild(title);
         } else {
           addCats(Math.min(Math.max(cats.length, 1), MAX_CATS - cats.length));
         }
@@ -279,20 +248,10 @@ initEditSlide('interactions');
       logoContainer.on('touchend', handleClick);
     }
 
-    function createSubtitle() {
-      var title = new PIXI.Text('denn Dein Canvas will mehr…', {fontFamily: 'Arial', fontSize: 48, fill: 0x101010, align: 'center'});
-      title.anchor.set(0.5, 0);
-      title.resolution = 2;
-      title.position.y = 80;
-      logoContainer.addChild(title);
-      return title;
-    }
-
     function createLogoSprite() {
       var logoSprite = PIXI.Sprite.fromFrame('img/pixi-logo.png');
       logoSprite.position.set(-logoSprite.width / 2, -logoSprite.height / 2);
       logoContainer.addChild(logoSprite);
-      // without this flag, mouse events will not be passed to this container
       logoContainer.interactive = true;
     }
 
@@ -325,8 +284,7 @@ initEditSlide('interactions');
   }
 
   function onResize() {
-    logoContainer.position.set(canvas.clientWidth / 2, canvas.clientHeight / 2);
-    backgroundContainer.position.set(canvas.clientWidth / 2, canvas.clientHeight);
+    logoContainer.position.set(canvas.clientWidth / 2, canvas.clientHeight / 3);
   }
 
   initPixiSlide(SLIDE_NAME, onGetRunCodeHook, onEnter, onResize);
