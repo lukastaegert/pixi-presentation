@@ -203,7 +203,7 @@ initEditSlide('interactions');
     logoContainer = new PIXI.Container();
     stage.addChild(logoContainer);
 
-    var loader = new PIXI.loaders.Loader()
+    new PIXI.loaders.Loader()
       .add('img/pixi-logo.png')
       .add('img/cats.json')
       .once('complete', setupPixiLogo)
@@ -288,5 +288,108 @@ initEditSlide('interactions');
   }
 
   initPixiSlide(SLIDE_NAME, onGetRunCodeHook, onEnter, onResize);
+}());
+
+// === Final presentation
+(function() {
+  var SLIDE_NAME = 'outro';
+  var runCode;
+  var canvas, renderer, stage;
+  var cats;
+
+  function onGetRunCodeHook(runCodeHook) {
+    runCode = runCodeHook;
+  }
+
+  function onRunCode() {
+    var CATS_PER_EXPLOSION = 100;
+    var EXPLOSION_TIME = 800;
+
+    canvas = document.getElementById('canvas-' + SLIDE_NAME);
+    renderer = new PIXI.autoDetectRenderer(canvas.clientWidth, canvas.clientHeight, {
+      transparent: true,
+      autoResize: false,
+      view: canvas
+    });
+
+    stage = new PIXI.Container();
+
+    var backgroundContainer = new PIXI.Container();
+    stage.addChild(backgroundContainer);
+
+    var catContainer = new PIXI.Container();
+    stage.addChild(catContainer);
+
+    new PIXI.loaders.Loader()
+      .add('img/cats.json')
+      .once('complete', performAnimationLoop)
+      .load();
+
+    var currentCatSpriteIndex = 0;
+
+    function createNexCatRocket() {
+      createCatRocket("" + currentCatSpriteIndex);
+      currentCatSpriteIndex = (currentCatSpriteIndex + 1) % 9;
+      setTimeout(createNexCatRocket, Math.random() * 2000);
+    }
+
+    function createCatRocket(catType) {
+      var cat = PIXI.Sprite.fromFrame(catType);
+      cat.position.set((canvas.clientWidth - cat.width) * Math.random(), canvas.clientHeight);
+      catContainer.addChild(cat);
+      return new TWEEN.Tween(cat.position)
+        .to({x: (canvas.clientWidth - cat.width) * Math.random(), y: (canvas.clientHeight / 2) * Math.random()}, 1000)
+        .easing(TWEEN.Easing.Quadratic.Out)
+        .start()
+        .onComplete(function() {
+          catContainer.removeChild(cat);
+          createCatExplosionAt(cat.position, catType);
+        });
+    }
+
+    function createCatExplosionAt(position, catType) {
+      var maxDistance = Math.sqrt(canvas.clientWidth * canvas.clientWidth + canvas.clientHeight * canvas.clientHeight) / 2;
+      for (var i = 0; i < CATS_PER_EXPLOSION; i++) {
+        var distance = (Math.random() + 1 / 2) * maxDistance;
+        var angle = Math.random() * 2 * Math.PI;
+        createSingleExplosionCat(position, {x: position.x + distance * Math.cos(angle), y: position.y + distance * Math.sin(angle)}, catType);
+      }
+    }
+
+    function createSingleExplosionCat(startPosition, tweenTo, catType) {
+      var cat = PIXI.Sprite.fromFrame(catType);
+      cat.position.set(startPosition.x, startPosition.y);
+      catContainer.addChild(cat);
+      var alphaTweenCat = {
+        get alpha() {return cat.alpha;},
+        set alpha(value) {cat.alpha = value;}
+      };
+
+      new TWEEN.Tween(alphaTweenCat)
+        .to({alpha: 0}, EXPLOSION_TIME)
+        .start();
+      new TWEEN.Tween(cat.position)
+        .to(tweenTo, EXPLOSION_TIME)
+        .easing(TWEEN.Easing.Quadratic.Out)
+        .start()
+        .onComplete(function() {
+          catContainer.removeChild(cat);
+        });
+    }
+
+    function performAnimationLoop() {
+      TWEEN.update();
+      renderer.render(stage);
+      window.requestAnimationFrame(performAnimationLoop);
+    }
+
+    setTimeout(createNexCatRocket, 5000);
+  }
+
+  function onEnter() {
+    runCode && runCode(onRunCode);
+  }
+
+  initPixiSlide(SLIDE_NAME, onGetRunCodeHook, onEnter);
 }());
 

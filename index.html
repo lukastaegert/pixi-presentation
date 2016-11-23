@@ -16,11 +16,12 @@
     <link rel="stylesheet" href="style/presentation.css">
     <script src="src/client/presentation.js"></script>
     <script src="src/client/pixi.min.js"></script>
+    <script src="src/client/Tween.js"></script>
     <script src="src/client/custom.js"></script>
 </head>
 
 <body class="charred auto-fragment">
-    <section data-slidename="intro" style="width:1024px;height:768px" id="intro-container">
+    <section data-slidename="intro" style="width:1024px;height:768px">
         <div style="position:absolute;width:1024px;height:768px;">
             <canvas id="canvas-intro" style="width:100%;height:100%"></canvas>
         </div>
@@ -35,27 +36,25 @@
     <section>
         <h2>Herausforderungen</h2>
         <ul>
-            <li>Immer komplexere UIs</li>
-            <li>Komplexe DOM-Animationen sind langsam</li>
-            <li>Ausweg: Canvas-Animationen (in > 97% aller Browser)</li>
+            <li data-fragment-index="1" class="no-burn">Immer komplexere UIs</li>
+            <li data-fragment-index="1" class="no-burn">Komplexe DOM-Animationen sind langsam</li>
+            <li data-fragment-index="1" class="no-burn">Ausweg: Canvas-Animationen</li>
         </ul>
     </section>
 
     <section>
         <h2>Pixi.js</h2>
         <ul>
-            <li>Einfaches Interface zur Gestaltung komplexer Canvas-Inhalte</li>
-            <li>Nutzt automatisch WebGL wenn verfügbar<br>(in ca. 90% aller Browser!)</li>
-            <li>Sonst extrem schneller Software-Renderer</li>
-            <li>Managt Maus- und Touchevents</li>
-            <li>Einfache Schnittstelle zum asynchronen Laden von Ressourcen</li>
+            <li data-fragment-index="1" class="no-burn">Interface zur Gestaltung komplexer Canvas-Inhalte</li>
+            <li data-fragment-index="1" class="no-burn">Nutzt automatisch WebGL wenn verfügbar</li>
+            <li data-fragment-index="1" class="no-burn">Zusätzlich sehr schneller Software-Renderer</li>
         </ul>
     </section>
 
-    <section data-title="Erste Schritte">
+    <section data-title="Der Scene-Graph">
         <section>
-            <h3>Erste</h3>
-            <h1>Schritte</h1>
+            <h3>Der</h3>
+            <h1>Scene-Graph</h1>
         </section>
         <section>
             <h2>Aufbau</h2>
@@ -80,6 +79,13 @@
 
 var stage = new PIXI.Container();
 
+var rect = new PIXI.Graphics()
+    .beginFill(0xff0000)
+    .drawRect(0, 0, 200, 100)
+    .endFill()
+
+var text = new PIXI.Text('Hallo');
+
 renderer.render(stage);
 </code></pre>
                     <a onclick="return runCode('structure')" href="#">Ausführen</a>
@@ -97,51 +103,6 @@ renderer.render(stage);
                     gerendert
                 </li>
             </ul>
-        </section>
-    </section>
-
-    <section data-title="Der Scene-Graph">
-        <section>
-            <h3>Der</h3>
-            <h1>Scene-Graph</h1>
-        </section>
-        <section>
-            <h2>Objektkomposition</h2>
-            <ul>
-                <li>Alle Objekte sind auch Container</li>
-                <li>Objekte haben eine <code style="color:#0000FF;">.position</code></li>
-                <li>Diese beschreibt die Position im Elternelement</li>
-                <li>Transformationen (<code>.scale</code>, <code>.rotation</code>)<br>beeinflussen alle Kinder</li>
-            </ul>
-        </section>
-        <section data-slidename="coordinates">
-            <div style="display:flex;width:1024px;height:768px;">
-                <div style="width:500px;">
-                    <canvas style="width: 100%;height:100%;" id="canvas-coordinates"></canvas>
-                </div>
-                <div style="width:524px;">
-<pre><code class="hljs js" id="coordinates" data-trim contenteditable style="width:100%;">var renderer = PIXI.autoDetectRenderer(
-  500, 768, {
-    view: document.getElementById(
-          'canvas-coordinates')
-  });
-
-var stage = new PIXI.Container();
-
-var circle = new PIXI.Graphics()
-  .beginFill(0x00ff00)
-  .drawCircle(0, 0, 100)
-  .endFill();
-
-var text = new PIXI.Text('Hallo');
-circle.addChild(text);
-stage.addChild(circle);
-
-renderer.render(stage);
-</code></pre>
-                    <a onclick="return runCode('coordinates')" href="#">Ausführen</a>
-                </div>
-            </div>
         </section>
     </section>
 
@@ -211,7 +172,7 @@ performAnimationLoop();
             <ul>
                 <li>Asynchron geladen mittels <code style="color:#0000FF;">PIXI.loaders.Loader</code></li>
                 <li>Für Bilder und Spritesheets</li>
-                <li>Einzelbilder automatisch in <code style="color:#0000FF;">PIXI.utils.TextureCache</code></li>
+                <li>Geladene Bilder automatisch in<br><code style="color:#0000FF;">PIXI.utils.TextureCache</code></li>
                 <li>Neue Sprites mit <code style="color:#0000FF;">PIXI.Sprite.fromFrame</code></li>
             </ul>
         </section>
@@ -227,7 +188,7 @@ performAnimationLoop();
           'canvas-resources')
   });
 
-var loader = new PIXI.loaders.Loader()
+new PIXI.loaders.Loader()
   .add('img/pixi-logo.png')
   .add('img/cats.json')
   .on('complete', setupStage)
@@ -279,7 +240,7 @@ function setupStage() {
     view: document.getElementById(
           'canvas-interactions')
   });
-var loader = new PIXI.loaders.Loader()
+new PIXI.loaders.Loader()
   .add('img/cats.json')
   .on('complete', setupStage).load();
 
@@ -330,13 +291,16 @@ function setupStage() {
             <li>Doktor der Mathematik (nicht Informatik…)</li>
             <li>Bei <a href="http://www.tngtech.com">TNG</a> seit September 2015</li>
             <li>Hauptinteressen:<br>Javascript (Frontend/Backend), Javascript Testing</li>
-            <li>Fragen/Feedback an<br><a href="mailto:lukas.taegert@tngtech.com">lukas.taegert@tngtech.com</a></li>
+            <li>Freue mich über Fragen/Feedback auf<br><a href="mailto:lukas.taegert@tngtech.com">lukas.taegert@tngtech.com</a></li>
         </ul>
     </section>
 
     <section>
-        <section>
-            <p>Interaktive Slides</p>
+        <section data-slidename="outro">
+            <div style="position:absolute;width:1024px;height:768px;">
+                <canvas id="canvas-outro" style="width:100%;height:100%"></canvas>
+            </div>
+            <p style="position: relative">Interaktive Slides</p>
             <a href="https://lukastaegert.github.io/pixi-presentation">
                 <img src="img/qrcode.svg" style="width:40%;">
                 <p>lukastaegert.github.io/pixi-presentation</p>
