@@ -383,7 +383,7 @@ initEditSlide('interactions');
       window.requestAnimationFrame(performAnimationLoop);
     }
 
-    setTimeout(createNexCatRocket, 5000);
+    setTimeout(createNexCatRocket, 10000);
   }
 
   function onEnter() {
