@@ -176,7 +176,7 @@ initEditSlide('interactions');
 (function() {
   var SLIDE_NAME = 'intro';
   var runCode;
-  var canvas, renderer, stage, logoContainer;
+  var canvas, renderer, stage, logoContainer, clickMeText;
   var cats;
   var isLogoRotating;
 
@@ -242,6 +242,7 @@ initEditSlide('interactions');
         } else {
           addCats(Math.min(Math.max(cats.length, 1), MAX_CATS - cats.length));
         }
+        clickMeText.text = 'Click me again!';
       }
 
       logoContainer.on('click', handleClick);
@@ -252,6 +253,10 @@ initEditSlide('interactions');
       var logoSprite = PIXI.Sprite.fromFrame('img/pixi-logo.png');
       logoSprite.position.set(-logoSprite.width / 2, -logoSprite.height / 2);
       logoContainer.addChild(logoSprite);
+      clickMeText = new PIXI.Text('Click me!', {fontFamily: 'Lato', fontSize: 30});
+      clickMeText.anchor.set(0.5, 0.5);
+      clickMeText.position.set(0, 0);
+      logoContainer.addChild(clickMeText);
       logoContainer.interactive = true;
     }
 
@@ -383,7 +388,7 @@ initEditSlide('interactions');
       window.requestAnimationFrame(performAnimationLoop);
     }
 
-    setTimeout(createNexCatRocket, 10000);
+    setTimeout(createNexCatRocket, 3000);
   }
 
   function onEnter() {

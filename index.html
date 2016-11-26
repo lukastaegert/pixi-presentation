@@ -86,6 +86,12 @@ var rect = new PIXI.Graphics()
 
 var text = new PIXI.Text('Hallo');
 
+stage.addChild(rect);
+rect.addChild(text);
+
+stage.position.set(100, 200);
+rect.rotation = Math.PI / 4;
+
 renderer.render(stage);
 </code></pre>
                     <a onclick="return runCode('structure')" href="#">Ausführen</a>
@@ -196,10 +202,15 @@ new PIXI.loaders.Loader()
 
 function setupStage() {
   var stage = new PIXI.Container();
-  var sprite = PIXI.Sprite
+  var sprite1 = PIXI.Sprite
     .fromFrame('img/pixi-logo.png');
 
-  stage.addChild(sprite);
+  var sprite2 = PIXI.Sprite
+    .fromFrame('3');
+  sprite2.position.set(100, 200);
+
+  stage.addChild(sprite1);
+  stage.addChild(sprite2);
   renderer.render(stage);
 }
 </code></pre>
